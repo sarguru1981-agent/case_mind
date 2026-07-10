@@ -1,2 +1,7 @@
-# case_mind
-AI-powered Investigation Intelligence Platform built step by step through The Detective's Guide to AI series.
+# 🕵️ CaseMind
+
+### AI-Powered Investigation Intelligence Platform
+
+Current Version: **v0.1**
+
+Codename: **Rookie Detective**
