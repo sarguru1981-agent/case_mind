@@ -1,229 +1,178 @@
-# 🚀 Project 001 – The First Detective Toolkit
+# 🕵️ CaseMind
 
-### Transforming Criminal Investigations with Transformers and Large Language Models
-
----
-
-## 📖 About This Project
-
-Project 001 is the first practical project in **The Detective's Guide to AI** series.
-
-After completing:
-
-- 📖 Part 1 – *The Robbery That Taught Me Transformers*
-- 📖 Part 2 – *The Police Academy That Built an LLM*
-
-the Police Department launches its first Artificial Intelligence initiative.
-
-Your assignment is to develop **The First Detective Toolkit**—a collection of educational Python programs that demonstrate how modern Transformers and Large Language Models work behind the scenes.
-
-Rather than treating AI as a black box, this project exposes every major building block through simple, executable Python programs.
-
-The goal is **understanding**, not production implementation.
+### Building an AI-Powered Criminal Investigation Platform — One Project at a Time
 
 ---
 
-# 🎯 Project Objective
+## 📖 About This Repository
 
-Develop the Police Department's first AI-powered criminal investigation toolkit using Transformers and Large Language Models.
+Welcome to **CaseMind**, the companion repository for **The Detective's Guide to AI**.
 
-By completing this project, you'll understand:
+Unlike traditional AI tutorials, this repository follows a story-driven learning journey where every theory article is followed by a practical project.
 
-- How Transformers process information
-- How Large Language Models learn
-- How each AI component works internally
-- How these components eventually become production AI systems
+Instead of learning isolated concepts, you'll gradually build a complete AI-powered criminal investigation platform for a fictional Police Department.
 
----
+Every project introduces one new capability.
 
-# 📚 Prerequisites
+Every capability builds upon the previous one.
 
-This project is designed to be completed **after** reading:
-
-- ✅ Part 1 – The Robbery That Taught Me Transformers
-- ✅ Part 2 – The Police Academy That Built an LLM
-
-The project assumes you're already familiar with the theory presented in those articles.
+By the end of the series, you'll have developed a modern AI investigation platform while understanding the concepts behind every major AI component.
 
 ---
 
-# 📂 Project Structure
+# 🎯 Learning Philosophy
 
-```text
-build-01-detective-toolkit/
+The Detective's Guide to AI follows a simple approach.
 
-README.md
-BUILD-01-GUIDE.md
-RELEASE-NOTES.md
-
-part-01-transformers/
-    01_tokens.py
-    02_token_ids.py
-    03_simple_tokenizer.py
-    04_embeddings.py
-    05_positional_encoding.py
-    06_attention.py
-    07_self_attention.py
-    08_multi_head_attention.py
-    09_transformer_layer.py
-
-part-02-llm-training/
-    01_training_examples.py
-    02_next_token_prediction.py
-    03_loss_function.py
-    04_gradient_descent.py
-    05_training_loop.py
-
-scripts/
-    generate_article_assets.py
+```
+Learn
+    ↓
+Build
+    ↓
+Learn
+    ↓
+Build
+    ↓
+Repeat
 ```
 
----
+Each theory article explains one concept.
 
-# 🧪 Investigation Module 01
+Each project transforms those concepts into working software.
 
-## Transformer Investigation Toolkit
+The goal is not simply to use AI libraries.
 
-This module demonstrates how a Transformer processes information.
-
-Included topics:
-
-- Tokenization
-- Token IDs
-- Tokenizer
-- Embeddings
-- Positional Encoding
-- Attention
-- Self-Attention
-- Multi-Head Attention
-- Transformer Layer
-
-Each Python program demonstrates one concept independently.
+The goal is to understand what those libraries are doing before using them in real-world applications.
 
 ---
 
-# 🧪 Investigation Module 02
+# 🗺️ Learning Roadmap
 
-## Large Language Model Training Toolkit
+## Phase 1 — AI Foundations
 
-This module demonstrates how a Large Language Model learns from data.
+### 📖 Part 1
+**The Robbery That Taught Me Transformers**
 
-Included topics:
+↓
 
-- Training Data
-- Next Token Prediction
-- Loss Function
-- Gradient Descent
-- Training Loop
+### 📖 Part 2
+**The Police Academy That Built an LLM**
 
-Together, these programs simulate the complete learning process of a language model.
+↓
 
----
+### 🚀 Project 001
+**The First Detective Toolkit**
 
-# ⚠️ Educational Note
+**Status:** ✅ Completed
 
-The implementations in this project are intentionally educational.
+What you'll build:
 
-In real-world AI systems, developers rarely implement:
-
-- Tokenizers
-- Attention mechanisms
-- Transformer layers
-- Training loops
-
-from scratch.
-
-These capabilities are already provided by mature AI frameworks such as:
-
-- Hugging Face Transformers
-- PyTorch
-- TensorFlow
-
-Project 001 focuses on helping you understand **how these components work internally**.
-
-Future projects will begin using production-ready AI libraries while focusing on solving real investigation problems.
+- Transformer Investigation Toolkit
+- LLM Training Toolkit
+- 14 educational Python implementations
+- Understanding the internal mechanics of modern LLMs
 
 ---
 
-# ▶️ Running The Project
+## Phase 2 — Retrieval-Augmented Generation
 
-Run any program individually.
+### 📖 Part 3
+**The Cold Case Files That Created RAG**
 
-Example:
+↓
 
-```bash
-python3 part-01-transformers/01_tokens.py
+### 📖 Part 4
+**The Wrong Evidence That Made RAG Hallucinate**
+
+↓
+
+### 🚀 Project 002
+**Building The Detective Archive**
+
+**Status:** 🚧 Planned
+
+What you'll build:
+
+- Detective Archive
+- Educational RAG pipeline
+- Trustworthy AI pipeline
+- Production-style AI application
+
+---
+
+## Future Phases
+
+Additional projects will continue expanding the Police Department's AI capabilities, including agentic workflows, memory, planning, multi-agent collaboration, and advanced AI systems.
+
+---
+
+# 📂 Repository Structure
+
+```
+builds/
+    project-001-first-detective-toolkit/
+    project-002-detective-archive/
+    ...
 ```
 
-or
+Each project contains:
 
-```bash
-python3 part-02-llm-training/05_training_loop.py
-```
+- README
+- Implementation
+- Release Notes
+- Supporting Guides
 
-No external dependencies are required.
-
-Python 3.8+ is sufficient.
-
----
-
-# 📖 Recommended Learning Path
-
-For the best learning experience:
-
-1. Read the corresponding article.
-2. Execute the matching Python program.
-3. Observe the output.
-4. Continue to the next concept.
-
-The complete learning path is documented in:
-
-**BUILD-01-GUIDE.md**
+The `main` branch provides a high-level overview of the complete journey, while each project branch contains detailed documentation for that specific project.
 
 ---
 
-# 🎓 Learning Outcomes
+# 🚀 Current Progress
 
-After completing Project 001, you will understand:
-
-- Tokenization
-- Token IDs
-- Tokenizers
-- Embeddings
-- Positional Encoding
-- Attention
-- Self-Attention
-- Multi-Head Attention
-- Transformer Layers
-- Training Data
-- Next Token Prediction
-- Cross-Entropy Loss
-- Gradient Descent
-- Complete Training Loops
-
-These concepts form the foundation of every modern Large Language Model.
+| Project | Status |
+|----------|--------|
+| Project 001 – The First Detective Toolkit | ✅ Completed |
+| Project 002 – Building The Detective Archive | 🚧 In Progress |
 
 ---
 
-# 🚀 What's Next?
+# 🎓 Who Is This Repository For?
 
-Project 001 explains **how AI thinks** and **how AI learns**.
+This repository is designed for:
 
-The next project focuses on a completely different challenge.
+- AI Engineers
+- Software Engineers
+- Students
+- Researchers
+- Anyone curious about how modern AI systems work behind the scenes
 
-> How can an AI investigator search information it has never seen before?
-
-Continue with:
-
-- 📖 Part 3 – The Cold Case Files That Created RAG
-- 📖 Part 4 – The Wrong Evidence That Made RAG Hallucinate
-
-Then begin:
-
-> 🚀 **Project 002 – Building The Detective Archive**
+No prior machine learning experience is required.
 
 ---
 
-**The investigation is over.**
+# 📚 Related Articles
 
-**The next project begins.**
+Every project is accompanied by detailed articles that explain the underlying concepts before implementation.
+
+Theory first.
+
+Implementation second.
+
+---
+
+# 🚀 Start Here
+
+If you're new to the series:
+
+1. Read **Part 1**.
+2. Continue with **Part 2**.
+3. Switch to **Project 001**.
+4. Return for **Part 3** and **Part 4**.
+5. Continue with **Project 002**.
+
+Following this order provides the best learning experience.
+
+---
+
+> *"Every investigation teaches a concept. Every project builds a solution."*
+
+Welcome to **CaseMind**.
