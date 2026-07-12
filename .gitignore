@@ -226,5 +226,6 @@ Thumbs.db
 claude.md
 CLAUDE.md
 
-# Build 1 — generated article assets (reproducible via scripts/generate_article_assets.py)
-builds/build-01-detective-toolkit/article-assets/
+# Generated article assets — reproducible via each build's scripts/generate_article_assets.py
+builds/project-001-detective-toolkit/article-assets/
+builds/project-002-detective-archive/article-assets/
