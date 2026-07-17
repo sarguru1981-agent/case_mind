@@ -10,7 +10,7 @@ Each article delivers one new capability. Each capability is production-grade fr
 
 **Article:** The Wrong Evidence That Made RAG Hallucinate
 
-**Status:** In Progress
+**Status:** Complete
 
 **What ships:**
 

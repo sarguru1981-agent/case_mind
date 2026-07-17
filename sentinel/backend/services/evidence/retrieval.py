@@ -8,21 +8,17 @@ from __future__ import annotations
 
 import re
 from pathlib import Path
-from typing import Optional
 
 import numpy as np
 from sklearn.feature_extraction.text import TfidfVectorizer
 from sklearn.metrics.pairwise import cosine_similarity
-import anthropic
 
-_LLM_MODEL   = "claude-sonnet-4-6"
 _CHUNK_WORDS = 80
 _OVERLAP     = 20
 _TOP_K       = 4
 
 
 class _Index:
-    """TF-IDF index for one case file."""
     def __init__(self, chunks: list[str]) -> None:
         self.chunks     = chunks
         self.vectorizer = TfidfVectorizer(ngram_range=(1, 2), min_df=1)
@@ -56,7 +52,6 @@ def _get_index(case_file: str) -> _Index:
 
 
 def _rerank(question: str, hits: list[tuple[str, float]]) -> list[tuple[str, float]]:
-    """Secondary keyword-overlap rerank on top of TF-IDF scores."""
     query_words = set(re.findall(r"\w+", question.lower()))
     ranked = []
     for doc, score in hits:
@@ -66,31 +61,11 @@ def _rerank(question: str, hits: list[tuple[str, float]]) -> list[tuple[str, flo
     return sorted(ranked, key=lambda x: x[1], reverse=True)
 
 
-def _grounding_brief(question: str, pages: list[str]) -> str:
-    evidence = "\n\n".join(f"[Page {i + 1}]\n{p}" for i, p in enumerate(pages))
-    return (
-        "You are a police evidence analyst. Answer the detective's question using ONLY "
-        "the evidence pages below. Cite page numbers inline. Do not speculate beyond "
-        "the evidence.\n\n"
-        f"EVIDENCE:\n{evidence}\n\n"
-        f"QUESTION: {question}\n\nANSWER:"
-    )
-
-
-def retrieve_and_answer(question: str, case_file: str) -> tuple[str, list[str], float]:
-    """Returns (answer_text, evidence_pages, retrieval_confidence)."""
+def retrieve_evidence(question: str, case_file: str) -> tuple[list[str], float]:
+    """Return (evidence_pages, retrieval_confidence). No LLM call."""
     index  = _get_index(case_file)
     hits   = index.query(question)
     ranked = _rerank(question, hits)
-
-    evidence_pages        = [doc for doc, _ in ranked]
-    retrieval_confidence  = float(np.mean([s for _, s in ranked])) if ranked else 0.0
-    brief          = _grounding_brief(question, evidence_pages)
-
-    client  = anthropic.Anthropic()
-    message = client.messages.create(
-        model      = _LLM_MODEL,
-        max_tokens = 512,
-        messages   = [{"role": "user", "content": brief}],
-    )
-    return message.content[0].text.strip(), evidence_pages, retrieval_confidence
+    evidence_pages       = [doc for doc, _ in ranked]
+    retrieval_confidence = float(np.mean([s for _, s in ranked])) if ranked else 0.0
+    return evidence_pages, retrieval_confidence

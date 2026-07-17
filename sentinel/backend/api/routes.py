@@ -3,7 +3,9 @@ from pathlib import Path
 from fastapi import APIRouter, HTTPException
 
 from models.trust_models import InvestigationRequest, TrustedResponse
-from services.evidence.retrieval import retrieve_and_answer
+from services.evidence.retrieval import retrieve_evidence
+from services.evidence.prompting import build_grounding_prompt
+from services.llm.client import generate_grounded_answer
 from services.trust.guardrail import check_injection
 from services.trust.contradiction import ContradictionDetector
 from services.trust.fact_check import extract_claims, verify_claims
@@ -11,7 +13,7 @@ from services.trust.trust_score import build_trusted_response
 
 router = APIRouter()
 
-_DATA_DIR   = Path(__file__).resolve().parent.parent.parent.parent / "data" / "case-files"
+_DATA_DIR   = Path(__file__).resolve().parent.parent.parent / "data" / "case-files"
 _DEFAULT_CF = str(_DATA_DIR / "millbrook_arson_2019.txt")
 
 _CASE_FILES = {
@@ -24,15 +26,13 @@ _detector = ContradictionDetector()
 
 @router.post("/query", response_model=TrustedResponse)
 async def query(request: InvestigationRequest) -> TrustedResponse:
-    # ── Milestone 7: Prompt injection guard ──────────────────────────────────
     if check_injection(request.question):
         return TrustedResponse(
-            status  = "INJECTION_DETECTED",
-            message = "Query rejected: prompt injection pattern detected.",
+            status   = "INJECTION_DETECTED",
+            message  = "Query rejected: prompt injection pattern detected.",
             question = request.question,
         )
 
-    # ── Resolve case file ─────────────────────────────────────────────────────
     if request.case_file:
         case_file = _CASE_FILES.get(request.case_file, str(_DATA_DIR / request.case_file))
     else:
@@ -42,15 +42,11 @@ async def query(request: InvestigationRequest) -> TrustedResponse:
         raise HTTPException(status_code=404, detail=f"Case file not found: {case_file}")
 
     try:
-        # ── Milestone 2: Evidence Retrieval Service ───────────────────────────
-        answer, evidence_pages, retrieval_confidence = retrieve_and_answer(
-            request.question, case_file
-        )
+        evidence_pages, retrieval_confidence = retrieve_evidence(request.question, case_file)
+        prompt = build_grounding_prompt(request.question, evidence_pages)
+        answer = generate_grounded_answer(prompt)
 
-        # ── Milestone 4: Contradiction detection ─────────────────────────────
         contradiction_report = _detector.detect(evidence_pages)
-
-        # ── Milestones 5 & 6: Claim extraction + fact checking ───────────────
         claims      = extract_claims(answer)
         fact_report = verify_claims(claims, evidence_pages)
 

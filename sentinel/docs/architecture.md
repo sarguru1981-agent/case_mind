@@ -24,10 +24,10 @@ The infrastructure layer is not the subject of the article series. The trust lay
 | API server | FastAPI | REST endpoints for query, health, version |
 | Data models | Pydantic | Request/response validation and serialisation |
 | Configuration | python-dotenv | Environment variable management |
-| Embeddings | sentence-transformers | Dense vector representations of case file chunks |
-| Vector store | ChromaDB | Persistent similarity search over indexed evidence |
-| LLM | Anthropic SDK | Grounded answer generation from retrieved evidence |
-| Orchestration | LangChain or LlamaIndex | Pipeline orchestration where it reduces boilerplate without hiding trust layer logic |
+| Embeddings | sentence-transformers *(production target)* | Dense vector representations of case file chunks |
+| Vector store | ChromaDB *(production target)* | Persistent similarity search over indexed evidence |
+| LLM gateway | anthropic SDK + Portkey AI Gateway | Anthropic-compatible API configuration; gateway handles routing to the underlying model provider |
+| Orchestration | LangChain or LlamaIndex *(production target)* | Pipeline orchestration where it reduces boilerplate without hiding trust layer logic |
 
 ### Frontend
 
@@ -80,7 +80,7 @@ Trusted Response
 
 ### Infrastructure Layer (libraries)
 
-sentence-transformers converts case file chunks into dense vectors. ChromaDB stores and searches those vectors at query time. The Anthropic SDK generates a grounded answer from the retrieved evidence pages.
+sentence-transformers converts case file chunks into dense vectors. ChromaDB stores and searches those vectors at query time. CaseMind Sentinel uses the Portkey AI Gateway through Anthropic-compatible API configuration: the Anthropic SDK is pointed at the Portkey base URL, and the gateway handles routing to the underlying model provider. The application holds only the Portkey API key.
 
 LangChain or LlamaIndex may be used inside the Evidence Retrieval Service where they reduce boilerplate without hiding the trust layer logic. The trust layer always remains explicit custom code — orchestration libraries are only used for the retrieval and answer-generation steps where their abstraction is safe.
 
@@ -115,7 +115,7 @@ Query (text)
   → ChromaDB returns top-K similar chunks
   → Reranked by keyword overlap
   → Grounding brief assembled
-  → Anthropic SDK generates grounded answer
+  → Anthropic SDK → Portkey AI Gateway → model provider → grounded answer returned
   → Contradiction detector scans retrieved pages
   → Claim extractor breaks answer into assertions
   → Fact checker verifies each claim against source pages
@@ -146,7 +146,7 @@ The production targets above require external network access to HuggingFace (mod
 
 **Production target:** `sentence-transformers` loads `all-MiniLM-L6-v2` from HuggingFace and produces 384-dimensional dense vectors. ChromaDB stores and searches those vectors.
 
-**Current local fallback:** `sklearn.TfidfVectorizer` (ngram 1–2) + `cosine_similarity`. In-memory index only; no ChromaDB. Activated when HuggingFace is unreachable (e.g. corporate SSL proxy blocking `huggingface.co`).
+**Current local fallback:** `sklearn.TfidfVectorizer` (ngram 1–2) + `cosine_similarity`. In-memory index only; no ChromaDB. Activated when HuggingFace is unreachable (e.g. network restrictions blocking `huggingface.co`).
 
 The trust layer, API contract, and all four trust services (contradiction, fact-check, guardrail, trust-score) are unaffected by this swap. Only the retrieval confidence values differ: TF-IDF cosine scores are in the 0.1–0.3 range; dense-vector cosine scores are in the 0.6–0.9 range. `routes.py` normalises TF-IDF scores before passing them to the trust formula so that a clean authentic query still produces a HIGH verdict.
 
@@ -154,7 +154,7 @@ The trust layer, API contract, and all four trust services (contradiction, fact-
 
 **Production target:** `React + Vite`. The Vite scaffold (`vite.config.js`, `src/`) is in place.
 
-**Current local fallback:** `sentinel/frontend/index.html` uses React 18 + Babel Standalone loaded from `unpkg.com`. No build step needed. Activated when the esbuild native binary is blocked by system security policy (MDM/Gatekeeper kills it with SIGKILL). The component logic in `index.html` mirrors `src/App.jsx`.
+**Current local fallback:** `sentinel/frontend/index.html` uses React 18 + Babel Standalone loaded from `unpkg.com`. No build step needed. Activated when the esbuild native binary is blocked by system security policy. `index.html` is the reference implementation for v1.0; `src/App.jsx` is an earlier milestone scaffold that will be brought up to parity when the Vite build target becomes available.
 
 Neither fallback changes the API contract, the trust layer logic, or the article's argument.
 

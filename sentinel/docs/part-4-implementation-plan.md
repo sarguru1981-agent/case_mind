@@ -47,14 +47,18 @@ collection.add(documents=[chunk], embeddings=[embedding], ids=[chunk_id])
 results = collection.query(query_embeddings=[query_embedding], n_results=top_k)
 ```
 
-### Anthropic SDK
+### Anthropic SDK + Portkey AI Gateway
 
-Used to generate a grounded answer from the retrieved evidence pages. The grounding instruction tells the model to answer only from the provided evidence.
+Used to generate a grounded answer from the retrieved evidence pages. CaseMind Sentinel uses the Portkey AI Gateway through Anthropic-compatible API configuration. The Anthropic SDK is pointed at the Portkey base URL; the `x-portkey-provider` header identifies the model provider. The application holds only the Portkey API key.
 
 ```
-client = anthropic.Anthropic()
+client = anthropic.Anthropic(
+    auth_token=PORTKEY_API_KEY,
+    base_url=PORTKEY_BASE_URL,
+    default_headers={"x-portkey-provider": PORTKEY_PROVIDER},
+)
 response = client.messages.create(
-    model="claude-sonnet-4-6",
+    model=PORTKEY_MODEL,
     messages=[{"role": "user", "content": brief}]
 )
 ```
@@ -86,7 +90,7 @@ Production targets. See *Local Development Fallbacks* in `docs/architecture.md` 
 | Configuration | python-dotenv | **active** | Environment variables |
 | Embeddings | sentence-transformers | target / TF-IDF fallback active | Dense vector encoding |
 | Vector store | ChromaDB | target / not active (TF-IDF in-memory) | Similarity search |
-| LLM | Anthropic SDK | **active** (needs `ANTHROPIC_API_KEY`) | Grounded answer generation |
+| LLM gateway | anthropic SDK + Portkey AI Gateway | **active** (needs `PORTKEY_API_KEY`) | Anthropic-compatible API config; gateway routes to model provider |
 | Orchestration | LangChain or LlamaIndex | not yet used | Evidence Retrieval Service plumbing where useful |
 | Frontend framework | React | **active** (CDN fallback) | Component-based UI |
 | Frontend build | Vite | target / CDN fallback active | Local dev server and bundler |
@@ -298,7 +302,7 @@ If any — the category, the two conflicting values, and which pages they came f
 - Override patterns checked before retrieval
 - Injected query rejected with a clear error before any LLM call
 
-**Deliverable:** `POST /api/query` with an injection attempt returns `{ error: injection_detected }`.
+**Deliverable:** `POST /api/query` with an injection attempt returns `{ status: "INJECTION_DETECTED", message: "Query rejected: prompt injection pattern detected." }`.
 
 ---
 
@@ -308,7 +312,7 @@ If any — the category, the two conflicting values, and which pages they came f
 - `TrustedResponse` assembled
 - `POST /api/query` returns the full trusted response
 
-**Deliverable:** Authentic query → trust score HIGH. Corrupted query → trust score LOW.
+**Deliverable:** Authentic query → trust score HIGH. Corrupted query (clean but fabricated evidence file) → trust score HIGH with a different answer — demonstrating that the pipeline cannot self-detect corrupted evidence without the trust layer's contradiction detection across sources.
 
 ---
 
@@ -333,8 +337,8 @@ sentinel/
 │   ├── api/
 │   │   └── routes.py                   POST /api/query endpoint
 │   ├── models/
-│   │   └── trust_models.py             Claim, VerifiedClaim, FactCheckReport,
-│   │                                   TrustScore, TrustedResponse
+│   │   └── trust_models.py             Claim, Contradiction,
+│   │                                   InvestigationRequest, TrustedResponse
 │   └── services/
 │       ├── evidence/
 │       │   └── retrieval.py            Evidence Retrieval Service
@@ -349,13 +353,12 @@ sentinel/
 │                                       build_trusted_response
 │
 ├── frontend/
+│   ├── index.html                      Live application (CDN React + Babel — active fallback)
+│   │                                   Case selector, trust badge, claim table, contradiction
+│   │                                   panel, injection rejection panel
 │   ├── src/
-│   │   ├── App.jsx                     Root component
-│   │   ├── components/
-│   │   │   ├── QueryPanel.jsx          Question input + submit
-│   │   │   └── TrustResponsePanel.jsx  Answer + score + claims + contradictions
-│   │   └── services/
-│   │       └── api.js                  fetch wrapper for /api/query
+│   │   └── App.jsx                     Production React scaffold (Vite target — not yet built)
+│   ├── vite.config.js
 │   └── package.json
 │
 └── data/
