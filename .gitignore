@@ -227,5 +227,5 @@ claude.md
 CLAUDE.md
 
 # Generated article assets — reproducible via each build's scripts/generate_article_assets.py
-builds/project-001-detective-toolkit/article-assets/
-builds/project-002-detective-archive/article-assets/
+learn/project-001-detective-toolkit/article-assets/
+learn/project-002-detective-archive/article-assets/

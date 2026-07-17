@@ -89,7 +89,7 @@ What you'll build:
 ### 🚀 Project 002
 **Building The Detective Archive**
 
-**Status:** 🚧 Planned
+**Status:** 🚧 In Progress
 
 What you'll build:
 
@@ -109,10 +109,12 @@ Additional projects will continue expanding the Police Department's AI capabilit
 # 📂 Repository Structure
 
 ```
-builds/
-    project-001-first-detective-toolkit/
+learn/
+    project-001-detective-toolkit/
     project-002-detective-archive/
-    ...
+
+sentinel/
+    CaseMind sentinel — Police AI Investigation Platform
 ```
 
 Each project contains:
