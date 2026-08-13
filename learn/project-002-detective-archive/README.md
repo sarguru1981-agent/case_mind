@@ -19,11 +19,12 @@ from retrieved cold case documents.
 
 ---
 
-## Which Article Does This Support?
+## Which Articles Does This Support?
 
-| Build | Article |
-|-------|---------|
+| Part | Article |
+|------|---------|
 | Part 3 | **The Cold Case Files That Created RAG** |
+| Part 4 | **The Wrong Evidence That Made RAG Hallucinate** |
 
 ---
 
@@ -31,7 +32,7 @@ from retrieved cold case documents.
 
 ```bash
 # From the repo root
-cd builds/project-002-detective-archive
+cd learn/project-002-detective-archive
 
 # Run any milestone directly
 python3 detective-archive/01_intelligence_gap.py
@@ -56,6 +57,17 @@ No dependencies to install. Python 3.8+ is all you need.
 | `07_precision_ranker.py` | The Precision Ranker | Reranking — term overlap second pass, 60/40 combined score |
 | `08_detective_brief.py` | The Detective's Brief | Prompt assembly — grounding instruction, evidence pages, question |
 | `09_complete_archive.py` | The Complete Detective Archive | Full RAG pipeline end to end — load, split, fingerprint, index, retrieve, rerank, brief, answer |
+
+---
+
+## Part 4 — Trustworthy RAG
+
+Part 4 (*The Wrong Evidence That Made RAG Hallucinate*) extends the archive with a trust layer that can detect corrupted evidence, verify claims, and score every response before returning it.
+
+The Part 4 production implementation lives in [`sentinel/`](../../sentinel/README.md) — specifically in:
+- [`sentinel/backend/services/rag_hallucination/`](../../sentinel/backend/services/rag_hallucination/README.md) — guardrail, contradiction detection, fact checking, trust scoring
+
+Educational scripts for Part 4 will be added to this directory in a future milestone.
 
 ---
 

@@ -1,0 +1,417 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CaseMind Sentinel</title>
+    <script crossorigin src="https://unpkg.com/react@18/umd/react.development.js"></script>
+    <script crossorigin src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
+    <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
+    <style>
+      *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+      body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+             background: #0d1117; color: #c9d1d9; min-height: 100vh; }
+      code, pre { font-family: 'SF Mono', 'Monaco', 'Inconsolata', monospace; }
+    </style>
+  </head>
+  <body>
+    <div id="root"></div>
+    <script type="text/babel">
+      const BACKEND = 'http://localhost:8000'
+
+      /* ─── design tokens ───────────────────────────────────────────────────── */
+      const C = {
+        bg:      '#0d1117', surface: '#161b22', border: '#21262d',
+        border2: '#30363d', text:    '#c9d1d9', muted:  '#8b949e',
+        dim:     '#484f58', blue:    '#58a6ff', blueBg: '#1c2d3e',
+        blueBrd: '#1f4d7e', green:   '#3fb950', yellow: '#e3b341',
+        red:     '#f85149', white:   '#ffffff', btnBg:  '#1f6feb',
+      }
+
+      /* ─── trust-verdict colours ───────────────────────────────────────────── */
+      const VERDICT_COLOR = {
+        'HIGH':               C.green,
+        'MEDIUM':             C.yellow,
+        'LOW / REVIEW REQUIRED': C.red,
+      }
+
+      /* ─── connection states ───────────────────────────────────────────────── */
+      const CONN = {
+        checking:     { label: 'Checking backend…',   color: C.yellow, dot: C.yellow },
+        connected:    { label: 'Backend connected',    color: C.green,  dot: C.green  },
+        disconnected: { label: 'Backend not connected',color: C.red,    dot: C.red    },
+      }
+
+      /* ─── shared style helpers ────────────────────────────────────────────── */
+      const card   = { background: C.surface, border: `1px solid ${C.border}`, borderRadius: 8 }
+      const lbl    = { fontSize: '0.55rem', textTransform: 'uppercase', letterSpacing: '0.15em', color: C.dim, marginBottom: '0.5rem' }
+      const mono   = { fontFamily: 'monospace', fontSize: '0.78rem' }
+      const sectionGap = { display: 'flex', flexDirection: 'column', gap: '0.5rem' }
+
+      /* ─── Dot ─────────────────────────────────────────────────────────────── */
+      function Dot({ color }) {
+        return <span style={{ width: 8, height: 8, borderRadius: '50%', background: color,
+                              flexShrink: 0, display: 'inline-block' }} />
+      }
+
+      /* ─── TrustBadge ──────────────────────────────────────────────────────── */
+      function TrustBadge({ score, verdict }) {
+        const color = VERDICT_COLOR[verdict] || C.muted
+        return (
+          <div style={{ display: 'flex', alignItems: 'center', gap: '0.75rem', flexWrap: 'wrap' }}>
+            <span style={{
+              fontSize: '0.68rem', fontWeight: 700, textTransform: 'uppercase',
+              letterSpacing: '0.12em', color, background: color + '22',
+              border: `1px solid ${color}55`, borderRadius: 999,
+              padding: '0.25rem 0.9rem',
+            }}>
+              {verdict}
+            </span>
+            <span style={{ ...mono, color: C.muted }}>
+              trust score: <span style={{ color, fontWeight: 700 }}>{(score * 100).toFixed(1)}%</span>
+            </span>
+          </div>
+        )
+      }
+
+      /* ─── ClaimTable ──────────────────────────────────────────────────────── */
+      function ClaimTable({ claims }) {
+        if (!claims || claims.length === 0) return null
+        const th = { ...mono, fontSize: '0.6rem', textTransform: 'uppercase',
+                     letterSpacing: '0.1em', color: C.dim, padding: '0.4rem 0.75rem',
+                     borderBottom: `1px solid ${C.border}`, textAlign: 'left', fontWeight: 600 }
+        const td = { ...mono, fontSize: '0.72rem', color: C.muted,
+                     padding: '0.45rem 0.75rem', verticalAlign: 'top',
+                     borderBottom: `1px solid ${C.border}` }
+        return (
+          <div>
+            <p style={lbl}>Claims</p>
+            <div style={{ ...card, overflow: 'hidden' }}>
+              <table style={{ width: '100%', borderCollapse: 'collapse' }}>
+                <thead>
+                  <tr>
+                    <th style={th}>Claim</th>
+                    <th style={{ ...th, width: 60, textAlign: 'center' }}>Page</th>
+                    <th style={{ ...th, width: 50, textAlign: 'center' }}>OK?</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {claims.map((c, i) => (
+                    <tr key={i}>
+                      <td style={{ ...td, lineHeight: 1.55 }}>{c.text}</td>
+                      <td style={{ ...td, textAlign: 'center', color: C.blue }}>{c.cited_page ?? '—'}</td>
+                      <td style={{ ...td, textAlign: 'center',
+                                   color: c.verified === true ? C.green : c.verified === false ? C.red : C.dim }}>
+                        {c.verified === true ? '✓' : c.verified === false ? '✗' : '—'}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        )
+      }
+
+      /* ─── ContradictionsPanel ─────────────────────────────────────────────── */
+      function ContradictionsPanel({ contradictions }) {
+        if (!contradictions || contradictions.length === 0) return null
+        return (
+          <div>
+            <p style={{ ...lbl, color: C.red }}>
+              ⚠ Contradictions detected ({contradictions.length})
+            </p>
+            <div style={{ ...card, overflow: 'hidden' }}>
+              {contradictions.map((c, i) => (
+                <div key={i} style={{
+                  padding: '0.65rem 0.9rem',
+                  borderBottom: i < contradictions.length - 1 ? `1px solid ${C.border}` : 'none',
+                }}>
+                  <span style={{ ...mono, fontSize: '0.65rem', textTransform: 'uppercase',
+                                 color: C.red, letterSpacing: '0.1em', marginRight: '0.6rem' }}>
+                    {c.label}
+                  </span>
+                  <span style={{ ...mono, fontSize: '0.72rem', color: C.muted }}>
+                    Page {c.page_a}: <span style={{ color: C.yellow }}>"{c.value_a}"</span>
+                    {' '}vs Page {c.page_b}: <span style={{ color: C.red }}>"{c.value_b}"</span>
+                  </span>
+                </div>
+              ))}
+            </div>
+          </div>
+        )
+      }
+
+      /* ─── TrustedResponsePanel ────────────────────────────────────────────── */
+      function TrustedResponsePanel({ response, statusCode }) {
+        if (!response) return null
+
+        /* injection / error states */
+        if (response.status === 'INJECTION_DETECTED') {
+          return (
+            <div style={{ ...card, padding: '1rem 1.25rem' }}>
+              <p style={{ ...lbl, color: C.red }}>Query rejected</p>
+              <p style={{ ...mono, fontSize: '0.8rem', color: C.red }}>
+                Prompt injection detected. Query was not processed.
+              </p>
+            </div>
+          )
+        }
+        if (response.status === 'ERROR') {
+          return (
+            <div style={{ ...card, padding: '1rem 1.25rem' }}>
+              <p style={{ ...lbl, color: C.red }}>Error</p>
+              <pre style={{ ...mono, fontSize: '0.75rem', color: C.red, whiteSpace: 'pre-wrap' }}>
+                {response.message}
+              </pre>
+            </div>
+          )
+        }
+        if (response.status === 'PENDING') {
+          return (
+            <div style={{ ...card, padding: '1rem 1.25rem' }}>
+              <p style={{ ...lbl }}>Response</p>
+              <pre style={{ ...mono, fontSize: '0.75rem', color: C.muted, whiteSpace: 'pre-wrap' }}>
+                {JSON.stringify(response, null, 2)}
+              </pre>
+            </div>
+          )
+        }
+
+        /* full trusted response */
+        return (
+          <div style={{ ...sectionGap }}>
+            {/* trust badge */}
+            {response.trust_score != null && (
+              <div style={{ ...card, padding: '0.85rem 1.1rem' }}>
+                <p style={lbl}>Trust Assessment</p>
+                <TrustBadge score={response.trust_score} verdict={response.verdict} />
+              </div>
+            )}
+
+            {/* answer */}
+            {response.answer && (
+              <div style={{ ...card, padding: '0.85rem 1.1rem' }}>
+                <p style={lbl}>Answer</p>
+                <p style={{ fontSize: '0.875rem', color: C.text, lineHeight: 1.65 }}>
+                  {response.answer}
+                </p>
+              </div>
+            )}
+
+            {/* contradictions */}
+            {response.contradictions && response.contradictions.length > 0 && (
+              <ContradictionsPanel contradictions={response.contradictions} />
+            )}
+
+            {/* claims */}
+            {response.claims && response.claims.length > 0 && (
+              <ClaimTable claims={response.claims} />
+            )}
+
+            {/* raw JSON toggle */}
+            <RawToggle data={response} statusCode={statusCode} />
+          </div>
+        )
+      }
+
+      /* ─── RawToggle ───────────────────────────────────────────────────────── */
+      function RawToggle({ data, statusCode }) {
+        const [open, setOpen] = React.useState(false)
+        return (
+          <div style={{ ...card, overflow: 'hidden' }}>
+            <div
+              onClick={() => setOpen(o => !o)}
+              style={{ padding: '0.5rem 0.9rem', display: 'flex', justifyContent: 'space-between',
+                       alignItems: 'center', cursor: 'pointer', userSelect: 'none' }}>
+              <span style={{ fontSize: '0.58rem', textTransform: 'uppercase',
+                             letterSpacing: '0.12em', color: C.dim }}>
+                Raw JSON — POST /api/query
+              </span>
+              <div style={{ display: 'flex', gap: '0.75rem', alignItems: 'center' }}>
+                {statusCode && (
+                  <span style={{ ...mono, fontSize: '0.65rem',
+                                 color: statusCode === 200 ? C.green : C.red }}>
+                    HTTP {statusCode}
+                  </span>
+                )}
+                <span style={{ ...mono, fontSize: '0.65rem', color: C.dim }}>
+                  {open ? '▲ hide' : '▼ show'}
+                </span>
+              </div>
+            </div>
+            {open && (
+              <pre style={{ ...mono, padding: '0.9rem', fontSize: '0.72rem', color: C.muted,
+                            borderTop: `1px solid ${C.border}`, overflowX: 'auto', margin: 0 }}>
+                {JSON.stringify(data, null, 2)}
+              </pre>
+            )}
+          </div>
+        )
+      }
+
+      /* ─── App ─────────────────────────────────────────────────────────────── */
+      function App() {
+        const [conn, setConn]         = React.useState('checking')
+        const [versionData, setVer]   = React.useState(null)
+        const [question, setQuestion] = React.useState('')
+        const [caseFile, setCaseFile] = React.useState('millbrook_arson_2019')
+        const [loading, setLoading]   = React.useState(false)
+        const [response, setResponse] = React.useState(null)
+        const [statusCode, setStatus] = React.useState(null)
+
+        React.useEffect(() => {
+          fetch(`${BACKEND}/version`)
+            .then(r => r.json())
+            .then(d => { setVer(d); setConn('connected') })
+            .catch(() => setConn('disconnected'))
+        }, [])
+
+        const handleSubmit = async () => {
+          if (!question.trim() || loading) return
+          setLoading(true); setResponse(null); setStatus(null)
+          try {
+            const res = await fetch(`${BACKEND}/api/query`, {
+              method:  'POST',
+              headers: { 'Content-Type': 'application/json' },
+              body:    JSON.stringify({ question: question.trim(), case_file: caseFile }),
+            })
+            setStatus(res.status)
+            setResponse(await res.json())
+          } catch (err) {
+            setResponse({ error: 'Failed to reach backend', detail: String(err) })
+          } finally {
+            setLoading(false)
+          }
+        }
+
+        const meta = CONN[conn]
+
+        return (
+          <div style={{ minHeight: '100vh', display: 'flex', flexDirection: 'column', background: C.bg }}>
+
+            {/* ── header ── */}
+            <header style={{ borderBottom: `1px solid ${C.border}`, padding: '1rem 2rem',
+                             display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+              <div style={{ fontSize: '1.1rem', fontWeight: 700, letterSpacing: '-0.02em' }}>
+                <span style={{ color: C.white }}>Case</span>
+                <span style={{ color: C.btnBg }}>Mind</span>
+                <span style={{ color: C.muted, fontWeight: 400, marginLeft: '0.4rem', fontSize: '0.95rem' }}>
+                  Sentinel
+                </span>
+              </div>
+              <span style={{ fontSize: '0.62rem', fontWeight: 600, textTransform: 'uppercase',
+                             letterSpacing: '0.1em', background: C.blueBg, color: C.blue,
+                             border: `1px solid ${C.blueBrd}`, padding: '0.2rem 0.7rem', borderRadius: 999 }}>
+                v1.0 · Part 4
+              </span>
+            </header>
+
+            {/* ── main ── */}
+            <main style={{ flex: 1, display: 'flex', flexDirection: 'column', alignItems: 'center',
+                           padding: '3rem 1.5rem' }}>
+              <div style={{ width: '100%', maxWidth: 680 }}>
+
+                {/* hero */}
+                <p style={{ fontSize: '0.62rem', textTransform: 'uppercase', letterSpacing: '0.18em',
+                            color: C.blue, marginBottom: '1.1rem' }}>
+                  Police AI Investigation Platform
+                </p>
+                <h1 style={{ fontSize: '2.2rem', fontWeight: 800, color: C.white, lineHeight: 1.2,
+                             marginBottom: '0.65rem', letterSpacing: '-0.02em' }}>
+                  Every cold case.<br />
+                  Every piece of evidence.<br />
+                  <span style={{ color: C.blue }}>Trusted.</span>
+                </h1>
+                <p style={{ fontSize: '0.875rem', color: C.muted, marginBottom: '2rem', lineHeight: 1.65 }}>
+                  Part 4 — Evidence Retrieval Service with Trust Layer.
+                  Every answer is scored, every claim is verified, every contradiction is flagged.
+                </p>
+
+                {/* connection card */}
+                <div style={{ ...card, padding: '0.85rem 1.1rem', marginBottom: '1.25rem' }}>
+                  <p style={lbl}>System Status</p>
+                  <div style={{ display: 'flex', alignItems: 'center', gap: '0.6rem' }}>
+                    <Dot color={meta.dot} />
+                    <span style={{ fontSize: '0.875rem', fontWeight: 600, color: meta.color }}>
+                      {meta.label}
+                    </span>
+                  </div>
+                  {versionData && (
+                    <pre style={{ marginTop: '0.6rem', ...mono, fontSize: '0.68rem', color: C.dim,
+                                  lineHeight: 1.6, whiteSpace: 'pre-wrap' }}>
+                      {JSON.stringify(versionData, null, 2)}
+                    </pre>
+                  )}
+                  {conn === 'disconnected' && (
+                    <p style={{ marginTop: '0.4rem', ...mono, fontSize: '0.65rem', color: C.dim }}>
+                      cd sentinel/backend &amp;&amp; python3 -m uvicorn main:app --port 8000
+                    </p>
+                  )}
+                </div>
+
+                {/* query form */}
+                <div style={{ ...sectionGap, marginBottom: '1.25rem' }}>
+                  <div>
+                    <p style={lbl}>Case File</p>
+                    <select
+                      value={caseFile}
+                      onChange={e => setCaseFile(e.target.value)}
+                      style={{ width: '100%', background: C.surface, border: `1px solid ${C.border2}`,
+                               borderRadius: 6, padding: '0.6rem 1rem', color: C.text,
+                               fontSize: '0.875rem', outline: 'none', cursor: 'pointer' }}>
+                      <option value="millbrook_arson_2019">Millbrook Arson 2019 (authentic)</option>
+                      <option value="millbrook_arson_corrupted">Millbrook Arson 2019 (corrupted)</option>
+                    </select>
+                  </div>
+                  <div>
+                    <p style={lbl}>Investigation Question</p>
+                    <textarea
+                      style={{ width: '100%', background: C.surface, border: `1px solid ${C.border2}`,
+                               borderRadius: 6, padding: '0.7rem 1rem', color: C.text,
+                               fontSize: '0.9rem', outline: 'none', resize: 'vertical',
+                               minHeight: 80, fontFamily: 'inherit', lineHeight: 1.5 }}
+                      placeholder="What accelerant was used in the Millbrook Arson?"
+                      value={question}
+                      onChange={e => setQuestion(e.target.value)}
+                    />
+                  </div>
+                  <div style={{ display: 'flex', justifyContent: 'flex-end' }}>
+                    <button
+                      onClick={handleSubmit}
+                      disabled={!question.trim() || loading}
+                      style={{
+                        background:    (!question.trim() || loading) ? '#21262d' : C.btnBg,
+                        color:         (!question.trim() || loading) ? C.dim : C.white,
+                        border:        'none', borderRadius: 6,
+                        padding:       '0.55rem 1.4rem',
+                        fontSize:      '0.875rem', fontWeight: 600,
+                        cursor:        (!question.trim() || loading) ? 'not-allowed' : 'pointer',
+                      }}>
+                      {loading ? 'Querying…' : 'Submit'}
+                    </button>
+                  </div>
+                </div>
+
+                {/* response */}
+                <TrustedResponsePanel response={response} statusCode={statusCode} />
+
+              </div>
+            </main>
+
+            {/* ── footer ── */}
+            <footer style={{ borderTop: `1px solid ${C.border}`, padding: '0.9rem',
+                             textAlign: 'center', fontSize: '0.62rem', color: C.dim }}>
+              CaseMind Sentinel v1.0 · Police AI Investigation Platform · The Detective's Guide to AI
+            </footer>
+
+          </div>
+        )
+      }
+
+      ReactDOM.createRoot(document.getElementById('root')).render(
+        <React.StrictMode><App /></React.StrictMode>
+      )
+    </script>
+  </body>
+</html>

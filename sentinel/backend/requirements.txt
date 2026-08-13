@@ -1,0 +1,16 @@
+# ── Always required ────────────────────────────────────────────────────────
+fastapi>=0.115.0
+uvicorn[standard]>=0.32.0
+pydantic>=2.9.0
+python-dotenv>=1.0.0
+
+# ── LLM gateway — Anthropic SDK pointed at Portkey AI Gateway ──────────────
+anthropic>=0.50.0
+
+# ── Retrieval: TF-IDF fallback (active when HuggingFace is unreachable) ────
+scikit-learn>=1.3.0
+numpy>=1.26.0
+
+# ── Retrieval: production target (requires HuggingFace model download) ─────
+# sentence-transformers>=3.0.0
+# chromadb>=0.6.0
