@@ -3,13 +3,13 @@ from pathlib import Path
 from fastapi import APIRouter, HTTPException
 
 from models.trust_models import InvestigationRequest, TrustedResponse
-from services.evidence.retrieval import retrieve_evidence
-from services.evidence.prompting import build_grounding_prompt
+from services.rag.retrieval import retrieve_evidence
+from services.rag.prompting import build_grounding_prompt
 from services.llm.client import generate_grounded_answer
-from services.trust.guardrail import check_injection
-from services.trust.contradiction import ContradictionDetector
-from services.trust.fact_check import extract_claims, verify_claims
-from services.trust.trust_score import build_trusted_response
+from services.rag_hallucination.guardrail import check_injection
+from services.rag_hallucination.contradiction import ContradictionDetector
+from services.rag_hallucination.fact_check import extract_claims, verify_claims
+from services.rag_hallucination.trust_score import build_trusted_response
 
 router = APIRouter()
 

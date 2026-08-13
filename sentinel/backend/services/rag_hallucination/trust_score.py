@@ -9,8 +9,8 @@ Verdict thresholds: HIGH ≥ 0.75 · MEDIUM ≥ 0.50 · LOW < 0.50
 from __future__ import annotations
 
 from models.trust_models import Claim, Contradiction, TrustedResponse
-from services.trust.contradiction import ContradictionReport
-from services.trust.fact_check import FactCheckReport
+from services.rag_hallucination.contradiction import ContradictionReport
+from services.rag_hallucination.fact_check import FactCheckReport
 
 
 def compute_trust_score(

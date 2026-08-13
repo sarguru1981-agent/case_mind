@@ -1,10 +1,10 @@
- # 🕵️ CaseMind
+# CaseMind
 
-### Building an AI-Powered Criminal Investigation Platform — One Project at a Time
+Building an AI-Powered Criminal Investigation Platform — One Project at a Time
 
 ---
 
-## 📖 About This Repository
+## About This Repository
 
 Welcome to **CaseMind**, the companion repository for **The Detective's Guide to AI**.
 
@@ -12,15 +12,13 @@ Unlike traditional AI tutorials, this repository follows a story-driven learning
 
 Instead of learning isolated concepts, you'll gradually build a complete AI-powered criminal investigation platform for a fictional Police Department.
 
-Every project introduces one new capability.
-
-Every capability builds upon the previous one.
+Every project introduces one new capability. Every capability builds upon the previous one.
 
 By the end of the series, you'll have developed a modern AI investigation platform while understanding the concepts behind every major AI component.
 
 ---
 
-# 🎯 Learning Philosophy
+## Learning Philosophy
 
 The Detective's Guide to AI follows a simple approach.
 
@@ -36,132 +34,102 @@ Build
 Repeat
 ```
 
-Each theory article explains one concept.
+Each theory article explains one concept. Each project transforms those concepts into working software.
 
-Each project transforms those concepts into working software.
-
-The goal is not simply to use AI libraries.
-
-The goal is to understand what those libraries are doing before using them in real-world applications.
+The goal is not simply to use AI libraries. The goal is to understand what those libraries are doing before using them in real-world applications.
 
 ---
 
-# 🗺️ Learning Roadmap
+## Repository Structure
 
-## Phase 1 — AI Foundations
+```
+learn/                                  Educational projects — concept demonstrations
+    project-001-detective-toolkit/      Project 001: Transformers and LLM fundamentals
+    project-002-detective-archive/      Project 002: RAG and Trustworthy RAG
 
-### 📖 Part 1
-**The Robbery That Taught Me Transformers**
+sentinel/                               CaseMind Sentinel — Police AI Investigation Platform
+    backend/                            FastAPI application
+    frontend/                           React command center
+    data/                               Case files
+    docs/                               Architecture, design docs, release notes
+```
 
-↓
+| Directory | Description |
+|-----------|-------------|
+| [`learn/project-001-detective-toolkit/`](learn/project-001-detective-toolkit/README.md) | 14 standalone Python scripts covering transformer and LLM training concepts |
+| [`learn/project-002-detective-archive/`](learn/project-002-detective-archive/README.md) | Step-by-step RAG and Trustworthy RAG pipeline built from scratch |
+| [`sentinel/`](sentinel/README.md) | CaseMind Sentinel v1.0 — production-style AI investigation platform |
 
-### 📖 Part 2
-**The Police Academy That Built an LLM**
+---
 
-↓
+## Learning Roadmap
 
-### 🚀 Project 001
-**The First Detective Toolkit**
+### Phase 1 — AI Foundations
 
-**Status:** ✅ Completed
+**Part 1** — The Robbery That Taught Me Transformers
+
+**Part 2** — The Police Academy That Built an LLM
+
+**Project 001 — The First Detective Toolkit** — Status: Completed
+
+See [`learn/project-001-detective-toolkit/`](learn/project-001-detective-toolkit/README.md)
 
 What you'll build:
-
 - Transformer Investigation Toolkit
 - LLM Training Toolkit
-- 14 educational Python implementations
-- Understanding the internal mechanics of modern LLMs
+- 14 educational Python implementations covering the internal mechanics of modern LLMs
 
 ---
 
-## Phase 2 — Retrieval-Augmented Generation
+### Phase 2 — Retrieval-Augmented Generation
 
-### 📖 Part 3
-**The Cold Case Files That Created RAG**
+**Part 3** — The Cold Case Files That Created RAG
 
-↓
+**Part 4** — The Wrong Evidence That Made RAG Hallucinate
 
-### 📖 Part 4
-**The Wrong Evidence That Made RAG Hallucinate**
+**Project 002 — Building The Detective Archive** — Status: In Progress
 
-↓
-
-### 🚀 Project 002
-**Building The Detective Archive**
-
-**Status:** 🚧 In Progress
+See [`learn/project-002-detective-archive/`](learn/project-002-detective-archive/README.md) and [`sentinel/`](sentinel/README.md)
 
 What you'll build:
-
-- Detective Archive
-- Educational RAG pipeline
-- Trustworthy AI pipeline
-- Production-style AI application
+- Detective Archive — educational RAG pipeline built from scratch
+- Trustworthy AI pipeline — hallucination detection and trust scoring
+- CaseMind Sentinel — production-style application bringing it all together
 
 ---
 
-## Future Phases
+### Future Phases
 
 Additional projects will continue expanding the Police Department's AI capabilities, including agentic workflows, memory, planning, multi-agent collaboration, and advanced AI systems.
 
 ---
 
-# 📂 Repository Structure
-
-```
-learn/
-    project-001-detective-toolkit/
-    project-002-detective-archive/
-
-sentinel/
-    CaseMind sentinel — Police AI Investigation Platform
-```
-
-Each project contains:
-
-- README
-- Implementation
-- Release Notes
-- Supporting Guides
-
-The `main` branch provides a high-level overview of the complete journey, while each project branch contains detailed documentation for that specific project.
-
----
-
-# 🚀 Current Progress
+## Current Progress
 
 | Project | Status |
-|----------|--------|
-| Project 001 – The First Detective Toolkit | ✅ Completed |
-| Project 002 – Building The Detective Archive | 🚧 In Progress |
+|---------|--------|
+| Project 001 — The First Detective Toolkit | Completed |
+| Project 002 — Building The Detective Archive | In Progress |
 
 ---
 
-# 🎓 Who Is This Repository For?
+## Who Is This Repository For?
 
-This repository is designed for:
-
-- AI Engineers
-- Software Engineers
-- Students
-- Researchers
-- Anyone curious about how modern AI systems work behind the scenes
+This repository is designed for AI engineers, software engineers, students, researchers, and anyone curious about how modern AI systems work behind the scenes.
 
 No prior machine learning experience is required.
 
 ---
 
-# 📚 Related Articles
+## Related Articles
 
 Every project is accompanied by detailed articles that explain the underlying concepts before implementation.
 
-Theory first.
-
-Implementation second.
+Theory first. Implementation second.
 
 ---
 
-# 🚀 Start Here
+## Start Here
 
 If you're new to the series:
 
@@ -176,6 +144,3 @@ Following this order provides the best learning experience.
 ---
 
 > *"Every investigation teaches a concept. Every project builds a solution."*
-
-Welcome to **CaseMind**.
-

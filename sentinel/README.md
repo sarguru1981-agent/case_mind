@@ -60,9 +60,9 @@ sentinel/
 │   ├── config/           Application settings (loaded from .env)
 │   ├── models/           Pydantic request/response models
 │   ├── services/
-│   │   ├── evidence/     Evidence Retrieval Service (retrieval + prompt builder)
-│   │   ├── llm/          LLM client boundary (Portkey AI Gateway)
-│   │   └── trust/        Trust layer (guardrail, contradiction, fact-check, scoring)
+│   │   ├── rag/               RAG pipeline (retrieval + prompt builder)
+│   │   ├── llm/               LLM client boundary (Portkey AI Gateway)
+│   │   └── rag_hallucination/ Trust layer (guardrail, contradiction, fact-check, scoring)
 │   ├── main.py
 │   ├── requirements.txt
 │   └── .env.example      Copy to .env and fill in credentials — do not commit .env
@@ -81,6 +81,13 @@ sentinel/
     ├── version-history.md            Version history and release notes
     └── article-assets/               Publication screenshots (Part 4)
 ```
+
+**Service documentation:**
+
+| Package | Description |
+|---------|-------------|
+| [`services/rag/`](backend/services/rag/README.md) | RAG pipeline — evidence retrieval and prompt assembly |
+| [`services/rag_hallucination/`](backend/services/rag_hallucination/README.md) | Trust layer — guardrail, contradiction detection, fact checking, trust scoring |
 
 ---
 

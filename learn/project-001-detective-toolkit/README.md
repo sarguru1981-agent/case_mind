@@ -31,7 +31,7 @@ servers, no APIs, no neural-network libraries — just the ideas, made concrete.
 
 ```bash
 # From the repo root
-cd builds/build-01-detective-toolkit
+cd learn/project-001-detective-toolkit
 
 # Run any example directly
 python3 part-01-transformers/01_tokens.py
