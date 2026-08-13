@@ -1,0 +1,89 @@
+{
+  "_meta": {
+    "source": "Northstar Facilities Ltd — Engineer Credential Access Records",
+    "data_as_of": "2025-04-10",
+    "classification": "RESTRICTED — OPERATION NIGHTFALL",
+    "access": "tool-only — not indexed in case archive",
+    "notes": "Records obtained under Major Crimes Unit formal request. Covers all credentialed access to Operation Nightfall premises. Credential NF-3847 assigned to Daniel Mercer."
+  },
+  "credentials": [
+    {
+      "credential_id": "NF-3847",
+      "assigned_to": "Daniel Mercer",
+      "role": "Senior Facilities Engineer",
+      "status": "Active",
+      "access_events": [
+        {
+          "premises": "38 Calloway Street (Hawthorne Jewellers)",
+          "date": "2025-01-11",
+          "time": "10:22",
+          "access_type": "Daytime maintenance visit",
+          "duration_minutes": 47,
+          "work_order": "NF-WO-20250111-004",
+          "notes": "Scheduled SentryGuard firmware inspection and panel check. Three days before MCR-2025-0101."
+        },
+        {
+          "premises": "7 Fenwick Lane (Millbrook Contemporary Gallery)",
+          "date": "2025-02-05",
+          "time": "11:05",
+          "access_type": "Daytime maintenance visit",
+          "duration_minutes": 55,
+          "work_order": "NF-WO-20250205-009",
+          "notes": "Scheduled alarm and lighting inspection. Three days before MCR-2025-0148."
+        },
+        {
+          "premises": "12 Hargrove Road (Bellweather Electronics Ltd)",
+          "date": "2025-03-02",
+          "time": "09:48",
+          "access_type": "Daytime maintenance visit",
+          "duration_minutes": 38,
+          "work_order": "NF-WO-20250302-012",
+          "notes": "Scheduled Safeguard Pro Series alarm inspection. Named on work order as D. MERCER. Three days before MCR-2025-0217."
+        },
+        {
+          "premises": "19 Alderton Square (Kingsley Watch Co.)",
+          "date": "2025-03-29",
+          "time": "10:33",
+          "access_type": "Daytime maintenance visit",
+          "duration_minutes": 41,
+          "work_order": "NF-WO-20250329-017",
+          "notes": "Scheduled SentryGuard panel and building services inspection. Three days before MCR-2025-0291."
+        },
+        {
+          "premises": "19 Alderton Square (Kingsley Watch Co.)",
+          "date": "2025-04-01",
+          "time": "23:51",
+          "access_type": "Out-of-hours credential entry",
+          "duration_minutes": null,
+          "work_order": null,
+          "notes": "No scheduled visit recorded for this date. Credential NF-3847 used after SentryGuard panel entered maintenance mode at 23:44. No legitimate work order exists for this access event."
+        }
+      ]
+    },
+    {
+      "credential_id": "NF-0847",
+      "assigned_to": "Ethan Cole",
+      "role": "Facilities Engineer (Former)",
+      "status": "Revoked — 2024-11-14",
+      "access_events": [],
+      "notes": "Credential revoked following Ethan Cole's resignation in November 2024. No access events recorded at any Operation Nightfall premises in the relevant periods. NF-0847 has no connection to the series."
+    },
+    {
+      "credential_id": "NF-1120",
+      "assigned_to": "Sandra Obi",
+      "role": "Facilities Engineer",
+      "status": "Active",
+      "access_events": [
+        {
+          "premises": "38 Calloway Street (Hawthorne Jewellers)",
+          "date": "2025-01-11",
+          "time": "10:22",
+          "access_type": "Daytime maintenance visit — joint entry",
+          "duration_minutes": 47,
+          "work_order": "NF-WO-20250111-004",
+          "notes": "Co-attended with NF-3847 on 11 January maintenance visit. No further access events at any Operation Nightfall premises."
+        }
+      ]
+    }
+  ]
+}

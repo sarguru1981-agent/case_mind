@@ -1,0 +1,78 @@
+{
+  "_meta": {
+    "source": "ANPR Network + Council CCTV Correlation — Operation Nightfall Series",
+    "data_as_of": "2025-04-10",
+    "classification": "RESTRICTED — OPERATION NIGHTFALL",
+    "access": "tool-only — not indexed in case archive",
+    "notes": "ANPR hits correlated with council CCTV by Millbrook Technical Surveillance Unit. Confidence levels reflect image quality, plate legibility, and proximity to incident address."
+  },
+  "sightings": [
+    {
+      "incident_case": "MCR-2025-0101",
+      "premises": "38 Calloway Street (Hawthorne Jewellers)",
+      "night": "2025-01-14 to 2025-01-15",
+      "vehicle_description": "Dark blue panel van",
+      "registration_captured": false,
+      "time_of_sighting": "01:30",
+      "camera_id": "PED-CAM-019 (Calloway Street delivery lane)",
+      "distance_from_premises_metres": 22,
+      "confidence": "LOW-MEDIUM",
+      "confidence_note": "Witness account only, no plate. Camera footage unavailable for this location.",
+      "corroboration": "Witness statement (unnamed member of public). No ANPR hit."
+    },
+    {
+      "incident_case": "MCR-2025-0148",
+      "premises": "7 Fenwick Lane (Millbrook Contemporary Gallery)",
+      "night": "2025-02-08 to 2025-02-09",
+      "vehicle_description": "White panel van — RGW-7734",
+      "registration_captured": true,
+      "registration_plate": "RGW-7734",
+      "time_of_sighting": "01:47",
+      "camera_id": "CCL-CAM-007 (Fenwick Lane / Beaumont Street junction)",
+      "distance_from_premises_metres": 80,
+      "confidence": "HIGH — ELIMINATED",
+      "confidence_note": "Plate confirmed. Vehicle identified as H&T Bakeries Ltd delivery van. Driver and route verified. Not connected to series.",
+      "vehicle_of_interest": false
+    },
+    {
+      "incident_case": "MCR-2025-0148",
+      "premises": "7 Fenwick Lane (Millbrook Contemporary Gallery)",
+      "night": "2025-02-08 to 2025-02-09",
+      "vehicle_description": "Dark blue panel van",
+      "registration_captured": false,
+      "time_of_sighting": "02:14",
+      "camera_id": "RES-CAM-044 (Fenwick Lane, residential building)",
+      "distance_from_premises_metres": 35,
+      "confidence": "MEDIUM",
+      "confidence_note": "Partial ANPR read consistent with Ford Transit dimensions. Plate not legible. Image quality limited by distance and low-light conditions.",
+      "corroboration": "ANPR partial read. No witness account."
+    },
+    {
+      "incident_case": "MCR-2025-0217",
+      "premises": "12 Hargrove Road (Bellweather Electronics Ltd)",
+      "night": "2025-03-05 to 2025-03-06",
+      "vehicle_description": "Dark blue Ford Transit",
+      "registration_captured": false,
+      "time_of_sighting": "02:11",
+      "camera_id": "RES-CAM-061 (Hargrove Road, 400m north of premises)",
+      "distance_from_premises_metres": 400,
+      "confidence": "MEDIUM-HIGH",
+      "confidence_note": "Vehicle type confirmed as Ford Transit by ANPR dimensional analysis. Colour confirmed as dark blue by camera colour calibration check. Plate frame partially obscured — not legible.",
+      "corroboration": "ANPR dimensional match and tyre impression at rear of premises."
+    },
+    {
+      "incident_case": "MCR-2025-0291",
+      "premises": "19 Alderton Square (Kingsley Watch Co.)",
+      "night": "2025-04-01 to 2025-04-02",
+      "vehicle_description": "Dark blue Ford Transit — MBK-4172",
+      "registration_captured": true,
+      "registration_plate": "MBK-4172",
+      "time_of_sighting": "23:49",
+      "camera_id": "ANPR-NET-034 (Alderton Square ring road approach)",
+      "distance_from_premises_metres": 60,
+      "confidence": "HIGH",
+      "confidence_note": "Full plate read confirmed by ANPR network. Vehicle confirmed as MBK-4172 (Dark Blue Ford Transit, registered keeper Daniel Mercer). Sighting at 23:49 precedes credential NF-3847 access at 23:51.",
+      "corroboration": "ANPR hit corroborated by Northstar Facilities access log (NF-3847 entry at 23:51). Vehicle matches description from Robberies 001, 002, and 003."
+    }
+  ]
+}

@@ -1,0 +1,105 @@
+MILLBROOK COUNTY POLICE DEPARTMENT
+MAJOR CRIMES UNIT — ACTIVE INVESTIGATION
+
+Case Number:        MCR-2025-0291
+Incident Type:      Burglary (Commercial Premises) — Operation Nightfall Series
+Location:           19 Alderton Square, Millbrook (Kingsley Watch Co.)
+Date of Incident:   Night of 1–2 April 2025
+Date Filed:         2 April 2025
+Investigating Officer: Detective P. Whitmore
+Status:             OPEN — NO CHARGE
+
+Series Designation: Fourth confirmed entry in Operation Nightfall series.
+
+---
+
+INCIDENT REPORT
+
+At 08:15 AM on 2 April 2025, Mr David Kingsley arrived to open Kingsley
+Watch Co. and discovered the rear delivery entrance had been opened. The
+securing bar on the internal side had been removed and placed against the
+wall. No alarm activation had been recorded by the monitoring station
+overnight. Mr Kingsley immediately called 999. Officers attended at 08:29 AM.
+
+Kingsley Watch Co. is a specialist retailer and authorised service centre for
+high-value mechanical watches. The premises holds significant stock of luxury
+timepieces in display cabinets and a secure stockroom.
+
+---
+
+STOLEN PROPERTY
+
+The following items are confirmed missing:
+
+  - Fifty-four luxury wristwatches from the main showroom display (Audemars
+    Piguet, Vacheron Constantin, A. Lange & Söhne, Patek Philippe):
+    estimated retail value £218,000
+  - Watch service parts and movements from the workshop:
+    estimated value £6,400
+
+Total confirmed missing: £224,400
+
+This is the highest-value loss recorded in the Operation Nightfall series
+to date. Display cabinets were opened using the correct keys. No forced entry
+was identified on the cabinet locks themselves.
+
+---
+
+FORENSIC FINDINGS
+
+Officers recovered no usable latent fingerprints from the cabinets or the
+rear delivery entrance. A cotton fibre sample consistent with a work garment
+was recovered from the securing bar.
+
+Alarm system investigation: Kingsley Watch Co. uses the SentryGuard system.
+Panel logs show the system entered maintenance mode at 23:44 on 1 April 2025.
+The credential used was NF-3847. The panel remained in maintenance mode until
+05:22 AM on 2 April. The maintenance mode window of approximately five hours
+and thirty-eight minutes encompassed the estimated period of entry and removal
+of stock.
+
+Access log records from Northstar Facilities Ltd, obtained under the ongoing
+Major Crimes enquiry, show that credential NF-3847 was used to enter the
+Kingsley Watch Co. premises at 23:51 on 1 April 2025. This access event
+occurred after the alarm was placed into maintenance mode. The credential
+record identifies NF-3847 as assigned to the engineer D. MERCER.
+
+Northstar Facilities Ltd records show that D. MERCER attended Kingsley Watch
+Co. on 29 March 2025 for a scheduled maintenance visit, three days before
+the burglary. The visit was for the SentryGuard panel and general building
+services.
+
+---
+
+INVESTIGATION NOTES
+
+The identification of credential NF-3847 as assigned to D. MERCER, and its
+use to gain access to the premises on the night of the burglary, represents
+the strongest evidential link established in the Operation Nightfall series
+to date.
+
+Enquiries have confirmed that D. MERCER is Daniel Mercer, aged 34, of an
+address in Southfield, Millbrook. Mercer is a qualified facilities engineer
+employed by Northstar Facilities Ltd. His employment record at Northstar
+Facilities shows no prior disciplinary actions and generally positive
+performance reviews.
+
+Officers note that Northstar Facilities Ltd itself operates legitimately.
+The suspected criminal activity involves an individual abusing the access
+and technical knowledge conferred by legitimate employment. No evidence has
+emerged implicating any other Northstar Facilities employee.
+
+Cross-referencing Daniel Mercer's credential access records with all four
+Operation Nightfall premises confirms he conducted maintenance visits
+to each location in the three days preceding the respective burglary.
+
+A detailed financial investigation into Daniel Mercer has been initiated
+in parallel. Results pending.
+
+---
+
+CONCLUSION
+
+Investigation active. Daniel Mercer is the primary individual of interest.
+Application for arrest warrant under review pending financial enquiry results.
+Operation Nightfall series investigation ongoing.

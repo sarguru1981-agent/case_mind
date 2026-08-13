@@ -1,0 +1,66 @@
+{
+  "_meta": {
+    "source": "DVLA Vehicle Enquiry — Millbrook County Police Major Crimes Unit",
+    "data_as_of": "2025-04-10",
+    "classification": "RESTRICTED — OPERATION NIGHTFALL",
+    "access": "tool-only — not indexed in case archive"
+  },
+  "records": [
+    {
+      "registration": "MBK-4172",
+      "make": "Ford",
+      "model": "Transit",
+      "colour": "Dark Blue",
+      "body_type": "Panel Van",
+      "year": 2018,
+      "registered_keeper": "Daniel Mercer",
+      "keeper_address": "14 Sheldon Close, Southfield, Millbrook",
+      "keeper_dob": "1990-08-23",
+      "mot_expiry": "2026-02-14",
+      "insurance_status": "Active",
+      "notes": "No prior police interest. Vehicle registered to keeper since 2021."
+    },
+    {
+      "registration": "RGW-7734",
+      "make": "Ford",
+      "model": "Transit",
+      "colour": "White",
+      "body_type": "Panel Van",
+      "year": 2020,
+      "registered_keeper": "H&T Bakeries Ltd",
+      "keeper_address": "Unit 7, Stokebridge Industrial Estate, Millbrook",
+      "keeper_dob": null,
+      "mot_expiry": "2025-11-03",
+      "insurance_status": "Active — Commercial Fleet Policy",
+      "notes": "Known overnight delivery route includes Fenwick Lane. Confirmed legitimate use by CCTV and driver statement (MCR-2025-0148)."
+    },
+    {
+      "registration": "TPL-0031",
+      "make": "Volkswagen",
+      "model": "Crafter",
+      "colour": "White",
+      "body_type": "Panel Van",
+      "year": 2019,
+      "registered_keeper": "Millbrook Building Services Ltd",
+      "keeper_address": "33 Granby Road, Millbrook",
+      "keeper_dob": null,
+      "mot_expiry": "2025-09-28",
+      "insurance_status": "Active",
+      "notes": "No connection to Operation Nightfall premises established."
+    },
+    {
+      "registration": "HVN-5523",
+      "make": "Mercedes-Benz",
+      "model": "Sprinter",
+      "colour": "Silver",
+      "body_type": "Panel Van",
+      "year": 2022,
+      "registered_keeper": "FastTrack Couriers Ltd",
+      "keeper_address": "Unit 2, Calloway Business Park, Millbrook",
+      "keeper_dob": null,
+      "mot_expiry": "2026-05-17",
+      "insurance_status": "Active",
+      "notes": "Operates daytime delivery routes. No sightings near incident locations overnight."
+    }
+  ]
+}

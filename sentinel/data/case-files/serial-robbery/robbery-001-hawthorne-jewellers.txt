@@ -1,0 +1,116 @@
+MILLBROOK COUNTY POLICE DEPARTMENT
+MAJOR CRIMES UNIT — ACTIVE INVESTIGATION
+
+Case Number:        MCR-2025-0101
+Incident Type:      Burglary (Commercial Premises) — Series Under Review
+Location:           38 Calloway Street, Millbrook (Hawthorne Jewellers)
+Date of Incident:   Night of 14–15 January 2025
+Date Filed:         16 January 2025
+Investigating Officer: Detective J. Okafor
+Status:             OPEN — NO CHARGE
+
+---
+
+INCIDENT REPORT
+
+At 06:22 AM on 15 January 2025, the proprietor of Hawthorne Jewellers, Mr
+Edmund Hawthorne, discovered the premises had been entered overnight. Officers
+attended at 06:40 AM. The rear service door, which opens onto a shared delivery
+lane, showed signs of forced entry at the deadbolt. No alarm activation was
+recorded by the monitoring station for the SentryGuard system installed on site.
+
+Internal CCTV was inoperable at the time of the incident. Hawthorne Jewellers'
+installation records show the camera system was last serviced 11 weeks prior
+and had experienced intermittent recording failures.
+
+No witnesses reported hearing or seeing anything until the proprietor's arrival.
+
+---
+
+STOLEN PROPERTY
+
+The following items are confirmed missing:
+
+  - Loose diamond inventory (certified stones, mixed cuts): estimated value £47,200
+  - Seventeen luxury wristwatches (Rolex, Patek Philippe, and Omega):
+    estimated retail value £31,400
+  - Small amount of petty cash from till drawer: £200
+
+Total estimated loss: £78,800 (pending full stock audit by insurance assessor)
+
+The main display cases were opened cleanly — no glass broken. Access to the
+display cases required knowledge of, or the physical keys for, a secondary
+locking mechanism. The till drawer was forced.
+
+---
+
+FORENSIC FINDINGS
+
+Fingerprint examination returned no usable latent prints at the point of
+forced entry. Trace material recovered from the rear service door frame
+included synthetic fibres consistent with a work or maintenance garment.
+
+A partial boot impression was recovered from soil adjacent to the rear entrance,
+estimated size 10–11 (UK). Cast taken; no match identified to date.
+
+Alarm system investigation: SentryGuard technical logs show the panel entered
+maintenance mode at 23:11 on 14 January 2025, triggered by a correctly
+authorised credential. The panel remained in maintenance mode until 04:47 AM
+on 15 January 2025, providing a window of approximately five hours and
+thirty-six minutes during which no alarm events were recorded or transmitted
+to the monitoring station.
+
+SentryGuard customer support confirmed that placing a panel into maintenance
+mode suppresses all motion detection and perimeter alerts. This action is
+available to engineer-level credential holders only.
+
+---
+
+PREMISES VISIT RECORDS
+
+Management at Hawthorne Jewellers confirmed a scheduled security system
+maintenance visit took place on 11 January 2025 — three days before the
+burglary. The visit was arranged through Northstar Facilities Ltd, a contracted
+facilities management company used by several commercial properties in the
+Millbrook area.
+
+Northstar Facilities confirmed the visit and provided a work order reference.
+The attending engineer conducted a routine inspection and firmware update to
+the SentryGuard control panel and sensors. A second individual was present with
+the attending engineer but was not named on the primary work order.
+
+The premises manager at the time did not ask the second individual for
+identification and described them as wearing a dark grey utility jacket.
+The manager confirmed both individuals appeared professional and were not
+challenged.
+
+---
+
+INVESTIGATION NOTES
+
+Enquiries are ongoing into the identity of the second individual present
+during the Northstar Facilities maintenance visit on 11 January 2025.
+
+A witness on Calloway Street reported seeing a dark blue commercial van
+parked in the delivery lane behind the premises at approximately 01:30 AM on
+15 January 2025. The witness was unable to identify a registration plate.
+The van was not observed by any CCTV system. No further description is
+available.
+
+Three members of staff at Hawthorne Jewellers have provided statements.
+All deny involvement. Background checks returned no prior offending. No
+connection to any individual of interest has been established.
+
+The proprietor confirms the secondary locking keys for the display cases are
+kept in a locked cabinet in the back office. Officers have been unable to
+determine how the cases were opened without signs of forced entry. The
+possibility of key duplication during a prior access event has not been
+ruled out.
+
+---
+
+CONCLUSION
+
+Investigation active. No suspect charged. Enquiries continuing into the
+premises visit records and the identity of the unregistered second individual
+present on 11 January 2025.

@@ -1,0 +1,97 @@
+{
+  "_meta": {
+    "source": "Financial Intelligence Unit — Operation Nightfall Series",
+    "data_as_of": "2025-04-10",
+    "classification": "RESTRICTED — OPERATION NIGHTFALL",
+    "access": "tool-only — not indexed in case archive",
+    "notes": "Records obtained under Production Order. Covers Daniel Mercer personal account (National Reference MBK-ACCT-9921) and associated transfer recipients. Marcus Vale identified as a person connected to proceeds."
+  },
+  "subjects": [
+    {
+      "name": "Daniel Mercer",
+      "account_ref": "MBK-ACCT-9921",
+      "occupation": "Senior Facilities Engineer, Northstar Facilities Ltd",
+      "declared_annual_income": 34200,
+      "transactions": [
+        {
+          "date": "2025-01-18",
+          "type": "Cash Deposit",
+          "amount_gbp": 3500,
+          "description": "Cash deposit — branch counter",
+          "proximity_to_incident": "3 days after MCR-2025-0101 (Hawthorne Jewellers, 14–15 Jan)"
+        },
+        {
+          "date": "2025-01-20",
+          "type": "Bank Transfer — Outbound",
+          "amount_gbp": 2000,
+          "recipient_name": "Marcus Vale",
+          "recipient_account_ref": "MBK-ACCT-4417",
+          "description": "Reference: 'consultancy'",
+          "proximity_to_incident": "5 days after MCR-2025-0101"
+        },
+        {
+          "date": "2025-02-13",
+          "type": "Cash Deposit",
+          "amount_gbp": 4200,
+          "description": "Cash deposit — branch counter",
+          "proximity_to_incident": "4 days after MCR-2025-0148 (Millbrook Gallery, 8–9 Feb)"
+        },
+        {
+          "date": "2025-02-15",
+          "type": "Bank Transfer — Outbound",
+          "amount_gbp": 1500,
+          "recipient_name": "Marcus Vale",
+          "recipient_account_ref": "MBK-ACCT-4417",
+          "description": "Reference: 'consultancy'",
+          "proximity_to_incident": "6 days after MCR-2025-0148"
+        },
+        {
+          "date": "2025-03-10",
+          "type": "Cash Deposit",
+          "amount_gbp": 2800,
+          "description": "Cash deposit — branch counter",
+          "proximity_to_incident": "4 days after MCR-2025-0217 (Bellweather Electronics, 5–6 Mar)"
+        },
+        {
+          "date": "2025-03-12",
+          "type": "Bank Transfer — Outbound",
+          "amount_gbp": 1800,
+          "recipient_name": "Marcus Vale",
+          "recipient_account_ref": "MBK-ACCT-4417",
+          "description": "Reference: 'consultancy'",
+          "proximity_to_incident": "6 days after MCR-2025-0217"
+        },
+        {
+          "date": "2025-04-07",
+          "type": "Cash Deposit",
+          "amount_gbp": 8500,
+          "description": "Cash deposit — branch counter",
+          "proximity_to_incident": "5 days after MCR-2025-0291 (Kingsley Watch Co., 1–2 Apr)"
+        },
+        {
+          "date": "2025-04-09",
+          "type": "Bank Transfer — Outbound",
+          "amount_gbp": 5000,
+          "recipient_name": "Marcus Vale",
+          "recipient_account_ref": "MBK-ACCT-4417",
+          "description": "Reference: 'consultancy'",
+          "proximity_to_incident": "7 days after MCR-2025-0291"
+        }
+      ],
+      "analyst_note": "Cash deposits follow each incident in the series with no legitimate income source identified for the amounts. Cumulative cash deposited: £19,000 over the series period. Transfers to Marcus Vale total £10,300 across four payments, all labelled 'consultancy'. No formal consultancy arrangement or invoice has been identified. Mercer's declared salary does not account for the deposit pattern."
+    },
+    {
+      "name": "Marcus Vale",
+      "account_ref": "MBK-ACCT-4417",
+      "occupation": "Operations Manager, Northstar Facilities Ltd",
+      "declared_annual_income": 62000,
+      "inbound_transfers_from_mercer": [
+        { "date": "2025-01-20", "amount_gbp": 2000, "reference": "consultancy" },
+        { "date": "2025-02-15", "amount_gbp": 1500, "reference": "consultancy" },
+        { "date": "2025-03-12", "amount_gbp": 1800, "reference": "consultancy" },
+        { "date": "2025-04-09", "amount_gbp": 5000, "reference": "consultancy" }
+      ],
+      "analyst_note": "Marcus Vale is Operations Manager at Northstar Facilities Ltd, the employer of Daniel Mercer. Vale has the authority to assign maintenance schedules, assign engineer credentials, and approve access to client premises. Receipt of payments totalling £10,300 from Mercer labelled 'consultancy' — with no consultancy arrangement on record — is consistent with payment for facilitation, specifically scheduling Mercer's access to Operation Nightfall premises. Investigation into Vale is at an early stage. He has not been interviewed."
+    }
+  ]
+}

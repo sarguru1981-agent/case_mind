@@ -1,0 +1,151 @@
+{
+  "_meta": {
+    "name": "Operation Nightfall — Ground Truth Specification",
+    "version": "1.0",
+    "classification": "DEV/TEST ONLY — NOT FOR PRODUCTION USE",
+    "warning": "This file is a deterministic validation specification for the AI Detective agent. No production investigation component should read this file to make decisions. It exists solely to validate agent reasoning during development and testing.",
+    "dataset_summary": {
+      "case_prefix": "MCR",
+      "series_name": "Operation Nightfall",
+      "incident_type": "Serial commercial burglary",
+      "incidents": 4,
+      "case_files": [
+        "sentinel/data/case-files/serial-robbery/robbery-001-hawthorne-jewellers.txt",
+        "sentinel/data/case-files/serial-robbery/robbery-002-millbrook-gallery.txt",
+        "sentinel/data/case-files/serial-robbery/robbery-003-bellweather-electronics.txt",
+        "sentinel/data/case-files/serial-robbery/robbery-004-kingsley-watches.txt"
+      ],
+      "tool_data_files": [
+        "sentinel/data/tool-data/vehicle-records.json",
+        "sentinel/data/tool-data/access-logs.json",
+        "sentinel/data/tool-data/surveillance-records.json",
+        "sentinel/data/tool-data/financial-records.json"
+      ]
+    }
+  },
+
+  "primary_suspect": {
+    "name": "Daniel Mercer",
+    "age": 34,
+    "address": "14 Sheldon Close, Southfield, Millbrook",
+    "employer": "Northstar Facilities Ltd",
+    "role": "Senior Facilities Engineer",
+    "credential_id": "NF-3847",
+    "vehicle": "Dark Blue Ford Transit, MBK-4172",
+    "status": "Primary individual of interest — not yet charged"
+  },
+
+  "secondary_person_of_interest": {
+    "name": "Marcus Vale",
+    "role": "Operations Manager, Northstar Facilities Ltd",
+    "connection": "Received 4 payments totalling £10,300 from Daniel Mercer labelled 'consultancy' with no legitimate arrangement on record. As Operations Manager, Vale has authority to schedule engineer visits and assign access credentials.",
+    "status": "Secondary person of interest — early-stage investigation, not yet interviewed",
+    "agent_expectation": "A correctly reasoning agent should identify Vale only after accessing financial-records.json and cross-referencing his role at Northstar Facilities Ltd with access-logs.json."
+  },
+
+  "archive_boundary": {
+    "description": "The AI Detective has access to the 4 case archive files via RAG. The case archive contains the following facts and no more.",
+    "facts_in_archive": [
+      "Northstar Facilities Ltd conducted a maintenance visit at each premises 3 days before the respective burglary",
+      "SentryGuard alarm placed into maintenance mode by an authorised credential before each burglary in Cases 001, 002, and 004",
+      "Safeguard Pro Series alarm placed into test/bypass mode in Case 003 (different vendor, same methodology)",
+      "Dark blue commercial van observed near Cases 001, 003 (no plate from archive)",
+      "D. MERCER named on Northstar Facilities work order for Case 003 (Bellweather Electronics, 2 March 2025)",
+      "Credential NF-3847 assigned to D. MERCER used for Case 004 (Kingsley Watch Co.) out-of-hours access at 23:51",
+      "No alarm activation transmitted to monitoring station in any of the 4 cases",
+      "Selective, efficient removal of high-value portable stock in all 4 cases",
+      "White van RGW-7734 observed near Case 002 — eliminated (H&T Bakeries Ltd, legitimate delivery route)"
+    ],
+    "facts_NOT_in_archive": [
+      "Vehicle registration MBK-4172 (requires vehicle-records.json tool)",
+      "Marcus Vale's identity and role (requires financial-records.json tool)",
+      "Financial connection between Mercer and Vale (requires financial-records.json tool)",
+      "Full ANPR confirmation of MBK-4172 at Case 004 location at 23:49 (requires surveillance-records.json tool)",
+      "Ethan Cole credential NF-0847 — revoked, no connection to series (requires access-logs.json tool)",
+      "Sandra Obi co-attended Case 001 visit — no further connection (requires access-logs.json tool)",
+      "Elimination detail for RGW-7734 as legitimate delivery van (partial in archive, full confirmation in surveillance-records.json)"
+    ]
+  },
+
+  "red_herrings": [
+    {
+      "item": "White van RGW-7734",
+      "appears_in": "robbery-002-millbrook-gallery.txt",
+      "nature": "The van is a real overnight delivery vehicle (H&T Bakeries Ltd) that happened to be on Fenwick Lane. Its plate is captured clearly. A naive agent may pursue it as a strong lead because the plate is the most legible capture in the archive.",
+      "resolution": "Querying vehicle-records.json confirms RGW-7734 is registered to H&T Bakeries Ltd — a commercial bakery. Querying surveillance-records.json shows it is marked HIGH confidence — ELIMINATED with corroboration from driver statement and CCTV route verification.",
+      "agent_correct_action": "Agent should run vehicle lookup, receive elimination status, and discard RGW-7734 as a suspect vehicle."
+    },
+    {
+      "item": "Ethan Cole — credential NF-0847",
+      "appears_in": "access-logs.json only (not in archive)",
+      "nature": "NF-0847 superficially resembles NF-3847. An agent performing substring matching on credential IDs may conflate the two. Ethan Cole resigned in November 2024; credential NF-0847 was revoked on 2024-11-14 and has no access events at any Operation Nightfall premises.",
+      "resolution": "access-logs.json explicitly states revocation date and notes no records at victim premises. The credential_id NF-0847 ≠ NF-3847.",
+      "agent_correct_action": "Agent should distinguish credential IDs precisely and confirm NF-0847 has no connection to the series."
+    },
+    {
+      "item": "Sandra Obi — co-attended Case 001 visit",
+      "appears_in": "access-logs.json only (not in archive)",
+      "nature": "Sandra Obi (credential NF-1120) co-attended the January maintenance visit at Hawthorne Jewellers with Daniel Mercer. She has no access events at any other Operation Nightfall premises and no out-of-hours access at any location.",
+      "resolution": "access-logs.json shows only one access event for NF-1120, limited to Case 001 daytime visit. Pattern analysis across all 4 premises confirms only NF-3847 (Mercer) is present at every location.",
+      "agent_correct_action": "Agent should consider Obi but correctly determine she is not the series actor based on absence from Cases 002, 003, and 004."
+    }
+  ],
+
+  "validation_questions": [
+    {
+      "id": "VQ-01",
+      "question": "Who conducted maintenance visits at all four Operation Nightfall premises in the three days before each burglary?",
+      "correct_answer": "Daniel Mercer, credential NF-3847, employed as Senior Facilities Engineer by Northstar Facilities Ltd.",
+      "evidence_sources": ["archive (Cases 003 and 004 name D. MERCER)", "access-logs.json (full coverage across all 4 premises)"],
+      "minimum_evidence_required": "Case 003 archive names D. MERCER. Full confirmation requires access-logs.json.",
+      "trust_level_expected": "HIGH"
+    },
+    {
+      "id": "VQ-02",
+      "question": "What vehicle was confirmed at the Kingsley Watch Co. location just before the burglary, and who does it belong to?",
+      "correct_answer": "Dark Blue Ford Transit registration MBK-4172, registered to Daniel Mercer of 14 Sheldon Close, Southfield, Millbrook.",
+      "evidence_sources": ["surveillance-records.json (ANPR hit at 23:49)", "vehicle-records.json (registration to Mercer)", "archive (Case 004 records NF-3847 out-of-hours entry at 23:51)"],
+      "minimum_evidence_required": "surveillance-records.json and vehicle-records.json both required. Archive alone does not contain the plate.",
+      "trust_level_expected": "HIGH"
+    },
+    {
+      "id": "VQ-03",
+      "question": "Is the white van observed on Fenwick Lane on the night of the Millbrook Gallery burglary connected to the series?",
+      "correct_answer": "No. RGW-7734 is a white Ford Transit registered to H&T Bakeries Ltd and confirmed as a legitimate overnight delivery vehicle on a known route. It is eliminated as a vehicle of interest.",
+      "evidence_sources": ["archive (Case 002 records plate RGW-7734)", "vehicle-records.json (keeper H&T Bakeries Ltd)", "surveillance-records.json (marked HIGH confidence — ELIMINATED)"],
+      "minimum_evidence_required": "vehicle-records.json sufficient to eliminate. surveillance-records.json provides additional corroboration.",
+      "trust_level_expected": "HIGH — after tool queries confirm elimination"
+    },
+    {
+      "id": "VQ-04",
+      "question": "Is there a financial connection between Daniel Mercer and any other Northstar Facilities employee?",
+      "correct_answer": "Yes. Daniel Mercer transferred a total of £10,300 to Marcus Vale, Operations Manager at Northstar Facilities Ltd, across four payments following each burglary. All transfers were labelled 'consultancy' with no legitimate arrangement on record.",
+      "evidence_sources": ["financial-records.json (Mercer outbound transfers to MBK-ACCT-4417)", "financial-records.json (Vale subject entry identifying role as Operations Manager)"],
+      "minimum_evidence_required": "financial-records.json required. This fact is entirely outside the case archive.",
+      "trust_level_expected": "MEDIUM — insufficient to charge Vale; sufficient to initiate further enquiry"
+    },
+    {
+      "id": "VQ-05",
+      "question": "Was the alarm system at Bellweather Electronics the same type as at the other three premises?",
+      "correct_answer": "No. Bellweather Electronics used a Safeguard Pro Series alarm — a different vendor from the SentryGuard systems at Hawthorne Jewellers, Millbrook Contemporary Gallery, and Kingsley Watch Co. The series methodology was adapted to operate across vendors.",
+      "evidence_sources": ["archive — robbery-003-bellweather-electronics.txt (Safeguard Pro Series)", "archive — robbery-001, 002, 004 (SentryGuard)"],
+      "minimum_evidence_required": "Archive only — all four case files required.",
+      "trust_level_expected": "HIGH"
+    },
+    {
+      "id": "VQ-06",
+      "question": "What is the total estimated value of property stolen across all four Operation Nightfall incidents?",
+      "correct_answer": "Approximately £445,500. Breakdown: MCR-2025-0101 £78,800 + MCR-2025-0148 £95,100 + MCR-2025-0217 £45,300 + MCR-2025-0291 £224,400.",
+      "evidence_sources": ["archive — all four case files"],
+      "minimum_evidence_required": "All four archive case files required.",
+      "trust_level_expected": "HIGH"
+    }
+  ],
+
+  "agent_design_notes": {
+    "archive_vs_tool_boundary": "The case archive (RAG-indexed .txt files) contains the observable facts available to the investigating detective at the time of reporting. The tool-data JSON files represent external databases (DVLA, access logs, financial intelligence) that must be explicitly queried. A correctly designed agent should retrieve archive context first, identify gaps, then call the appropriate tool to fill them.",
+    "escalating_confidence": "The ANPR evidence escalates across the series: LOW-MEDIUM witness account (Case 001), MEDIUM partial plate (Case 002-003), HIGH full plate MBK-4172 (Case 004). An agent should reason about evidence strength increasing across incidents.",
+    "northstar_framing": "Northstar Facilities Ltd is not a criminal organisation. The dataset is designed so that the company itself is a victim of an employee abusing legitimate access. Agent responses should not characterise the company as complicit without specific evidence.",
+    "marcus_vale_depth": "Marcus Vale's connection is entirely in financial-records.json. He does not appear in the archive. An agent that does not call the financial records tool should state that no intra-organisation financial connection has been found — not that Vale has no involvement."
+  }
+}
