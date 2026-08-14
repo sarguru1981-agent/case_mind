@@ -12,6 +12,7 @@ from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
 
 from api.routes import router
+from api.agentic_rag_routes import router as agentic_rag_router
 from config.settings import settings
 from models.trust_models import HealthResponse, VersionResponse
 
@@ -23,7 +24,7 @@ app = FastAPI(
 
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=["http://localhost:5173", "http://localhost:3000"],
+    allow_origins=["http://localhost:5173", "http://localhost:5174", "http://localhost:5175", "http://localhost:3000"],
     allow_methods=["*"],
     allow_headers=["*"],
     allow_credentials=True,
@@ -49,6 +50,7 @@ def version() -> VersionResponse:
 
 
 app.include_router(router, prefix="/api")
+app.include_router(agentic_rag_router, prefix="/api/agentic-rag")
 
 if __name__ == "__main__":
     import uvicorn

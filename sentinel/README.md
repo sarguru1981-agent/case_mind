@@ -1,4 +1,4 @@
-# CaseMind Sentinel v1.0
+# CaseMind Sentinel v0.4
 
 **Police AI Investigation Platform**
 
@@ -16,38 +16,38 @@ Educational projects live in `learn/`. This application lives in `sentinel/`.
 
 ## Current Version
 
-**v1.0 — Part 4: Trust Layer**
+**v0.4 — Build 3: Agentic RAG**
 
-*The Wrong Evidence That Made RAG Hallucinate*
+*Building an AI Detective Agent*
 
-Status: Release Candidate
+Status: Approved
 
-CaseMind Sentinel v1.0 delivers a full Evidence Retrieval Service (RAG Pipeline) with a custom trust layer that can detect corrupted evidence, verify claims, and score every response for reliability before returning it to the detective.
+CaseMind Sentinel v0.4 adds a multi-hop Agentic RAG investigation loop. The four Operation Nightfall case files are searched iteratively — each hop derives its query from the strongest unexhausted cross-case lead found in the previous hop — until the investigation reaches the archive boundary.
 
 See `docs/version-history.md` for the full version history and roadmap.
 
 ---
 
-## Part 4 Capability
+## Build 3 Capability
 
-The trust layer runs alongside the RAG pipeline and produces a verifiable, scored response rather than a raw answer.
+The Agentic RAG loop replaces single-pass retrieval with an iterative archive investigation.
 
-**Pipeline:**
+**Investigation loop (Search → Reason → Search):**
 
-1. Prompt injection guard — rejects malicious queries before any LLM call
-2. Evidence retrieval — retrieves the top-K most relevant case file chunks
-3. Grounding prompt — assembles evidence pages into a grounded brief
-4. LLM answer — generates a grounded answer via Portkey AI Gateway
-5. Contradiction detection — scans retrieved pages for conflicting facts
-6. Claim extraction — breaks the answer into discrete verifiable assertions
-7. Fact checking — verifies each claim against the source pages it cites
-8. Trust scoring — combines retrieval confidence, verification rate, and contradiction penalty
-9. Trusted response — packages answer + claims + contradictions + score + verdict
+1. Plan — convert objective into seed query and investigative angles
+2. Search all four case files — retrieve top-K chunks from each
+3. Reason — identify entities appearing across multiple files (cross-case leads)
+4. Select strongest unexhausted lead — generate next query from evidence
+5. Repeat up to max hops
+6. Archive Boundary — report unresolved facts requiring external data
 
-**Trust score verdicts:**
-- `HIGH` (≥ 0.75) — answer is reliable
-- `MEDIUM` (≥ 0.50) — review recommended
-- `LOW / REVIEW REQUIRED` (< 0.50, or any contradiction detected) — do not act on this answer without review
+**Archive boundary signals for Operation Nightfall:**
+- Vehicle registration ownership (DVLA)
+- Engineer access logs (Northstar Facilities records)
+- ANPR / surveillance correlation (Technical Surveillance Unit)
+- Financial relationships (Financial Intelligence Unit)
+
+See `backend/services/agentic_rag/README.md` for full implementation detail.
 
 ---
 
@@ -62,24 +62,29 @@ sentinel/
 │   ├── services/
 │   │   ├── rag/               RAG pipeline (retrieval + prompt builder)
 │   │   ├── llm/               LLM client boundary (Portkey AI Gateway)
-│   │   └── rag_hallucination/ Trust layer (guardrail, contradiction, fact-check, scoring)
+│   │   ├── rag_hallucination/ Trust layer (guardrail, contradiction, fact-check, scoring)
+│   │   └── agentic_rag/       Agentic RAG — multi-hop archive investigation loop
+│   ├── tests/            Automated tests (32 agentic RAG tests)
 │   ├── main.py
 │   ├── requirements.txt
 │   └── .env.example      Copy to .env and fill in credentials — do not commit .env
-├── frontend/             React + Vite command center
+├── frontend/             React + Vite — cinematic Investigation Console
 │   ├── src/              Production React components
-│   ├── index.html        Local fallback (CDN React, no build step needed)
+│   ├── scripts/          prebuild-vendor.mjs (restricted-machine support)
+│   ├── index.html
 │   └── package.json
 ├── data/
 │   ├── case-files/       Raw case file text (authentic + corrupted Millbrook variants)
 │   └── evidence/         Processed evidence artifacts (embeddings, index snapshots — future)
+├── article-assets/
+│   └── agentic-rag/      Approved Build 3 article screenshots
 ├── configs/              Application-level configuration (case registry, deployment manifests — future)
 └── docs/
     ├── architecture.md               Technical design and two-layer architecture
     ├── part-4-implementation-plan.md Full implementation plan for v1.0
     ├── roadmap.md                    Feature roadmap by article part
     ├── version-history.md            Version history and release notes
-    └── article-assets/               Publication screenshots (Part 4)
+    └── article-assets/               Publication screenshots (Part 4 / v1.0)
 ```
 
 **Service documentation:**
@@ -88,6 +93,7 @@ sentinel/
 |---------|-------------|
 | [`services/rag/`](backend/services/rag/README.md) | RAG pipeline — evidence retrieval and prompt assembly |
 | [`services/rag_hallucination/`](backend/services/rag_hallucination/README.md) | Trust layer — guardrail, contradiction detection, fact checking, trust scoring |
+| [`services/agentic_rag/`](backend/services/agentic_rag/README.md) | Agentic RAG — multi-hop Search → Reason → Search investigation loop |
 
 ---
 
@@ -121,12 +127,23 @@ cd sentinel/backend
 PYTHONPATH=. python3 -m uvicorn main:app --reload --port 8000
 ```
 
-**Frontend (local fallback — no build step):**
+**Frontend (standard):**
 
 ```bash
 cd sentinel/frontend
-python3 -m http.server 5173
+npm install
+npm run dev
 ```
+
+**Frontend (restricted machine — esbuild blocked by security policy):**
+
+```bash
+cd sentinel/frontend
+npm install
+npm run dev:no-esbuild
+```
+
+The `dev:no-esbuild` script automatically pre-builds vendor bundles via Babel/Rollup before starting Vite. Normal developers use `npm run dev`.
 
 Open `http://localhost:5173`.
 
@@ -137,6 +154,7 @@ Open `http://localhost:5173`.
 | GET | /health | Liveness check |
 | GET | /version | Application metadata |
 | POST | /api/query | Submit a detective query, receive a trusted response |
+| POST | /api/agentic-rag/investigate | Run Agentic RAG multi-hop archive investigation |
 
 ---
 
