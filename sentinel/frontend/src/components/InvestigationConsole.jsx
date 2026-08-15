@@ -10,6 +10,7 @@ import EvidenceOverview from './EvidenceOverview'
 import ArchiveBoundary from './ArchiveBoundary'
 import AtAGlanceAssessment from './AtAGlanceAssessment'
 import IntelligenceDrawer from './IntelligenceDrawer'
+import AgentInvestigationConsole from './AgentInvestigationConsole'
 
 const BACKEND = 'http://localhost:8000'
 
@@ -394,9 +395,91 @@ function SidePanel({ result, selectedNodeId, onNodeSelect }) {
   )
 }
 
+// ── Mode Selector ─────────────────────────────────────────────────────────────
+
+function ModeSelector({ mode, setMode }) {
+  const modes = [
+    {
+      id: 'rag', label: 'Agentic RAG', sublabel: 'Archive search loop',
+      color: C.cyan, disabled: false,
+    },
+    {
+      id: 'agent', label: 'AI Agent', sublabel: 'External tool investigation',
+      color: C.blue, disabled: false,
+    },
+    {
+      id: 'agentic-ai', label: 'Agentic AI', sublabel: 'Coming Later',
+      color: C.dim, disabled: true,
+    },
+  ]
+
+  return (
+    <div style={{
+      display: 'flex', borderBottom: `1px solid ${C.border}`,
+      background: C.panel, flexShrink: 0,
+    }}>
+      {modes.map(m => {
+        const active = mode === m.id
+        return (
+          <button
+            key={m.id}
+            disabled={m.disabled}
+            onClick={() => !m.disabled && setMode(m.id)}
+            style={{
+              display: 'flex', flexDirection: 'column', alignItems: 'flex-start',
+              padding: '0.5rem 1.25rem',
+              background: active ? C.surface : 'transparent',
+              border: 'none',
+              borderRight: `1px solid ${C.border}`,
+              borderBottom: `2px solid ${active ? m.color : 'transparent'}`,
+              cursor: m.disabled ? 'not-allowed' : 'pointer',
+              opacity: m.disabled ? 0.45 : 1,
+              transition: 'all 0.15s',
+            }}
+          >
+            <div style={{ display: 'flex', alignItems: 'center', gap: '0.4rem' }}>
+              <div style={{
+                width: 6, height: 6, borderRadius: '50%',
+                background: active ? m.color : C.dim,
+                boxShadow: active ? `0 0 5px ${m.color}` : 'none',
+                transition: 'all 0.15s',
+              }} />
+              <span style={{
+                fontSize: '0.65rem', fontWeight: active ? 800 : 500,
+                textTransform: 'uppercase', letterSpacing: '0.1em',
+                color: active ? m.color : C.muted,
+              }}>
+                {m.label}
+              </span>
+              {m.disabled && (
+                <span style={{
+                  fontSize: '0.48rem', textTransform: 'uppercase', letterSpacing: '0.1em',
+                  color: C.dim, background: C.bg, border: `1px solid ${C.border}`,
+                  borderRadius: 2, padding: '0.06rem 0.3rem',
+                }}>
+                  Coming Later
+                </span>
+              )}
+            </div>
+            <span style={{
+              fontSize: '0.52rem', letterSpacing: '0.06em', marginTop: '0.1rem',
+              color: active ? m.color + 'aa' : C.dim,
+            }}>
+              {m.sublabel}
+            </span>
+          </button>
+        )
+      })}
+    </div>
+  )
+}
+
 // ── Main component ────────────────────────────────────────────────────────────
 
 export default function InvestigationConsole({ conn }) {
+  const [mode, setMode] = useState('rag')
+
+  // Agentic RAG state
   const [objective, setObjective]       = useState(DEFAULT_OBJECTIVE)
   const [maxHops, setMaxHops]           = useState(5)
   const [loading, setLoading]           = useState(false)
@@ -426,48 +509,74 @@ export default function InvestigationConsole({ conn }) {
     }
   }
 
-  if (loading) return <LoadingState objective={objective} />
+  const renderRagContent = () => {
+    if (loading) return <LoadingState objective={objective} />
 
-  if (!result) {
+    if (!result) {
+      return (
+        <>
+          {error && (
+            <div style={{
+              margin: '0.75rem 1.5rem', padding: '0.7rem 1rem',
+              background: C.redBg, border: `1px solid ${C.redBrd}`,
+              borderRadius: 6, fontFamily: 'monospace', fontSize: '0.78rem', color: C.red,
+            }}>
+              {error}
+            </div>
+          )}
+          <PreRunState
+            objective={objective} setObjective={setObjective}
+            maxHops={maxHops}     setMaxHops={setMaxHops}
+            onRun={run} loading={loading} conn={conn}
+          />
+        </>
+      )
+    }
+
     return (
-      <>
-        {error && (
-          <div style={{
-            margin: '0.75rem 1.5rem',
-            padding: '0.7rem 1rem',
-            background: C.redBg, border: `1px solid ${C.redBrd}`,
-            borderRadius: 6, fontFamily: 'monospace', fontSize: '0.78rem', color: C.red,
-          }}>
-            {error}
-          </div>
-        )}
-        <PreRunState
-          objective={objective} setObjective={setObjective}
-          maxHops={maxHops}     setMaxHops={setMaxHops}
-          onRun={run} loading={loading} conn={conn}
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
+        <WorkstationHeader
+          result={result}
+          onReset={() => { setResult(null); setError(null); setSelectedNodeId(null) }}
         />
-      </>
+        <div className="investigation-workspace anim-slide-in">
+          <OperationOverview result={result} conn={conn} />
+          <IntelligenceCenter
+            result={result}
+            selectedNodeId={selectedNodeId}
+            onNodeSelect={setSelectedNodeId}
+          />
+          <SidePanel
+            result={result}
+            selectedNodeId={selectedNodeId}
+            onNodeSelect={setSelectedNodeId}
+          />
+        </div>
+      </div>
     )
   }
 
   return (
     <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0 }}>
-      <WorkstationHeader
-        result={result}
-        onReset={() => { setResult(null); setError(null); setSelectedNodeId(null) }}
-      />
-      <div className="investigation-workspace anim-slide-in">
-        <OperationOverview result={result} conn={conn} />
-        <IntelligenceCenter
-          result={result}
-          selectedNodeId={selectedNodeId}
-          onNodeSelect={setSelectedNodeId}
-        />
-        <SidePanel
-          result={result}
-          selectedNodeId={selectedNodeId}
-          onNodeSelect={setSelectedNodeId}
-        />
+      <ModeSelector mode={mode} setMode={setMode} />
+      <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}>
+        {mode === 'rag' && renderRagContent()}
+        {mode === 'agent' && <AgentInvestigationConsole conn={conn} />}
+        {mode === 'agentic-ai' && (
+          <div style={{
+            flex: 1, display: 'flex', flexDirection: 'column',
+            alignItems: 'center', justifyContent: 'center', gap: '0.75rem',
+          }}>
+            <div style={{ fontSize: '2rem', color: C.dim, opacity: 0.4 }}>⊘</div>
+            <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.15em', color: C.dim }}>
+              Agentic AI — Not Yet Implemented
+            </div>
+            <p style={{ fontSize: '0.75rem', color: C.dim, textAlign: 'center', maxWidth: 360, lineHeight: 1.6 }}>
+              Goal decomposition, task prioritization, and autonomous workflow
+              management are reserved for a future build.
+            </p>
+          </div>
+        )}
       </div>
     </div>
   )

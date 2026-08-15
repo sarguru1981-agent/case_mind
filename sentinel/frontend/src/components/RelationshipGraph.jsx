@@ -105,20 +105,31 @@ function PlaceholderGraph() {
   )
 }
 
-export default function RelationshipGraph({ result, selectedNodeId, onNodeSelect }) {
+export default function RelationshipGraph({ result, agentNodes = [], agentEdges = [], selectedNodeId, onNodeSelect }) {
   const [hovered, setHovered] = useState(null)
-  const { caseNodes, leadNodes, edges } = buildGraph(result)
-  const hasData = leadNodes.length > 0
+  const { caseNodes: ragCaseNodes, leadNodes, edges: ragEdges } = buildGraph(result)
+
+  const agentMode = agentNodes.length > 0
+  const allCaseNodes = Object.entries(CASE_POS).map(([id, pos]) => ({ id, ...pos }))
+  const caseNodes = agentMode ? allCaseNodes : ragCaseNodes
+  const hasData = agentMode || leadNodes.length > 0
 
   const activeId = selectedNodeId || hovered
 
   const connectedIds = new Set()
   if (activeId) {
     connectedIds.add(activeId)
-    for (const e of edges) {
-      if (e.from.id === activeId || e.to.id === activeId) {
-        connectedIds.add(e.from.id)
-        connectedIds.add(e.to.id)
+    if (!agentMode) {
+      for (const e of ragEdges) {
+        if (e.from.id === activeId || e.to.id === activeId) {
+          connectedIds.add(e.from.id); connectedIds.add(e.to.id)
+        }
+      }
+    } else {
+      for (const e of agentEdges) {
+        if (e.from === activeId || e.to === activeId) {
+          connectedIds.add(e.from); connectedIds.add(e.to)
+        }
       }
     }
   }
@@ -133,6 +144,16 @@ export default function RelationshipGraph({ result, selectedNodeId, onNodeSelect
     return (e.from.id === activeId || e.to.id === activeId) ? 0.95 : 0.07
   }
 
+  const agentEdgeOpacity = (e) => {
+    if (!activeId) return 0.55
+    return (e.from === activeId || e.to === activeId) ? 0.95 : 0.07
+  }
+
+  const resolvePos = (id) => {
+    if (CASE_POS[id]) return CASE_POS[id]
+    return agentNodes.find(n => n.id === id) || null
+  }
+
   const handleNodeClick = (id) => {
     if (onNodeSelect) onNodeSelect(selectedNodeId === id ? null : id)
   }
@@ -140,7 +161,7 @@ export default function RelationshipGraph({ result, selectedNodeId, onNodeSelect
   return (
     <div style={{
       background: C.surface,
-      border: `1px solid ${selectedNodeId ? C.cyanBrd : C.border}`,
+      border: `1px solid ${selectedNodeId ? (agentMode ? C.orangeBrd : C.cyanBrd) : C.border}`,
       borderRadius: 6,
       overflow: 'hidden',
       transition: 'border-color 0.2s',
@@ -151,7 +172,7 @@ export default function RelationshipGraph({ result, selectedNodeId, onNodeSelect
         display: 'flex', justifyContent: 'space-between', alignItems: 'center',
       }}>
         <span style={{ fontSize: '0.55rem', textTransform: 'uppercase', letterSpacing: '0.15em', color: C.muted }}>
-          Evidence Relationship Network
+          {agentMode ? 'External Evidence Network' : 'Evidence Relationship Network'}
         </span>
         <div style={{ display: 'flex', gap: '0.5rem', alignItems: 'center' }}>
           {selectedNodeId && (
@@ -159,20 +180,31 @@ export default function RelationshipGraph({ result, selectedNodeId, onNodeSelect
               onClick={() => onNodeSelect && onNodeSelect(null)}
               style={{
                 fontSize: '0.52rem', textTransform: 'uppercase', letterSpacing: '0.1em',
-                color: C.cyan, background: C.cyanBg, border: `1px solid ${C.cyanBrd}`,
+                color: agentMode ? C.orange : C.cyan,
+                background: agentMode ? C.orangeBg : C.cyanBg,
+                border: `1px solid ${agentMode ? C.orangeBrd : C.cyanBrd}`,
                 borderRadius: 3, padding: '0.1rem 0.45rem', cursor: 'pointer',
               }}
             >
               × clear
             </span>
           )}
-          {hasData && (
+          {agentMode && agentNodes.length > 0 && (
+            <span style={{
+              fontSize: '0.55rem', textTransform: 'uppercase', letterSpacing: '0.1em',
+              color: C.orange, background: C.orangeBg, border: `1px solid ${C.orangeBrd}`,
+              borderRadius: 3, padding: '0.1rem 0.45rem',
+            }}>
+              {agentNodes.length} ext. nodes · {agentEdges.length} connections
+            </span>
+          )}
+          {!agentMode && hasData && (
             <span style={{
               fontSize: '0.55rem', textTransform: 'uppercase', letterSpacing: '0.1em',
               color: C.green, background: C.greenBg, border: `1px solid ${C.greenBrd}`,
               borderRadius: 3, padding: '0.1rem 0.45rem',
             }}>
-              {leadNodes.length} leads · {edges.length} connections
+              {leadNodes.length} leads · {ragEdges.length} connections
             </span>
           )}
         </div>
@@ -201,11 +233,105 @@ export default function RelationshipGraph({ result, selectedNodeId, onNodeSelect
           <line key={x} x1={x} y1={0} x2={x} y2={440} stroke={C.border} strokeWidth={0.5} opacity={0.4} />
         ))}
 
-        {!hasData && <PlaceholderGraph />}
+        {!hasData && !agentMode && <PlaceholderGraph />}
 
-        {hasData && (
+        {/* Agent mode — always show case nodes + discovered external nodes */}
+        {agentMode && (
           <>
-            {edges.map((e, i) => {
+            {/* All 4 case nodes always visible */}
+            {allCaseNodes.map(cn => {
+              const isHov = hovered === cn.id
+              const isSel = selectedNodeId === cn.id
+              const lines = cn.label.split('\n')
+              return (
+                <g key={cn.id}
+                  onMouseEnter={() => setHovered(cn.id)}
+                  onMouseLeave={() => setHovered(null)}
+                  onClick={() => handleNodeClick(cn.id)}
+                  style={{ cursor: 'pointer', opacity: nodeOpacity(cn.id), transition: 'opacity 0.2s' }}>
+                  <rect x={cn.x - 44} y={cn.y - 29} width={88} height={58} rx={5}
+                    fill={isSel ? cn.color + '28' : isHov ? cn.color + '18' : C.surface}
+                    stroke={cn.color} strokeWidth={isSel ? 2 : isHov ? 1.5 : 1}
+                    filter={isSel ? 'url(#glow-strong)' : isHov ? 'url(#glow)' : undefined}
+                    style={{ transition: 'all 0.15s' }} />
+                  <text x={cn.x} y={cn.y - 14} textAnchor="middle"
+                    fill={cn.color} fontSize="9" fontFamily="monospace" fontWeight="700">
+                    {cn.short}
+                  </text>
+                  {lines.map((line, i) => (
+                    <text key={i} x={cn.x} y={cn.y + 4 + i * 12} textAnchor="middle"
+                      fill={isSel ? C.text : isHov ? C.text : C.muted} fontSize="8" fontFamily="sans-serif">
+                      {line}
+                    </text>
+                  ))}
+                </g>
+              )
+            })}
+
+            {/* Agent-discovered edges */}
+            {agentEdges.map((e, i) => {
+              const fromPos = resolvePos(e.from)
+              const toPos   = resolvePos(e.to)
+              if (!fromPos || !toPos) return null
+              const midX = (fromPos.x + toPos.x) / 2
+              const midY = (fromPos.y + toPos.y) / 2 - 6
+              return (
+                <g key={i} opacity={agentEdgeOpacity(e)}>
+                  <path d={edgePath(fromPos, toPos)}
+                    stroke={C.orange} strokeWidth={1.5}
+                    fill="none" strokeDasharray="5,3"
+                    style={{ animation: 'dash-flow 1.5s linear infinite' }} />
+                  <text x={midX} y={midY} textAnchor="middle"
+                    fill={C.orange} fontSize="7" fontFamily="monospace" opacity={0.85}>
+                    {e.label}
+                  </text>
+                </g>
+              )
+            })}
+
+            {/* Agent-discovered nodes — progressive reveal */}
+            {agentNodes.map(an => {
+              const isHov = hovered === an.id
+              const isSel = selectedNodeId === an.id
+              const r = isSel ? 27 : isHov ? 25 : 22
+              return (
+                <g key={an.id}
+                  onMouseEnter={() => setHovered(an.id)}
+                  onMouseLeave={() => setHovered(null)}
+                  onClick={() => handleNodeClick(an.id)}
+                  style={{ cursor: 'pointer', opacity: nodeOpacity(an.id), transition: 'opacity 0.2s' }}>
+                  {/* Animated outer ring — new external connection treatment */}
+                  <circle cx={an.x} cy={an.y} r={r + 10}
+                    fill="none" stroke={an.color} strokeWidth={1}
+                    strokeDasharray="4,4" opacity={0.3}
+                    style={{ animation: 'dash-flow 2.5s linear infinite' }} />
+                  <circle cx={an.x} cy={an.y} r={r}
+                    fill={isSel ? an.color + '38' : an.color + '20'}
+                    stroke={an.color} strokeWidth={isSel ? 2.5 : isHov ? 2 : 1.5}
+                    filter={isSel ? 'url(#glow-strong)' : 'url(#glow)'} />
+                  <text x={an.x} y={an.y - 5} textAnchor="middle"
+                    fill={an.color} fontSize="7.5" fontFamily="monospace" fontWeight="700" dominantBaseline="middle">
+                    {TYPE_ABBR[an.type] || 'EXT'}
+                  </text>
+                  <text x={an.x} y={an.y + 8} textAnchor="middle"
+                    fill={an.color + 'cc'} fontSize="7" fontFamily="monospace" dominantBaseline="middle">
+                    EXT
+                  </text>
+                  <text x={an.x} y={an.y + 36} textAnchor="middle"
+                    fill={isSel ? C.white : isHov ? C.text : C.muted} fontSize="8.5"
+                    fontFamily="sans-serif" style={{ transition: 'fill 0.15s' }}>
+                    {an.label}
+                  </text>
+                </g>
+              )
+            })}
+          </>
+        )}
+
+        {/* RAG mode — existing rendering */}
+        {!agentMode && hasData && (
+          <>
+            {ragEdges.map((e, i) => {
               const isActive = e.from.id === activeId || e.to.id === activeId
               return (
                 <path
@@ -314,9 +440,25 @@ export default function RelationshipGraph({ result, selectedNodeId, onNodeSelect
         display: 'flex', gap: '1rem', flexWrap: 'wrap', alignItems: 'center',
       }}>
         {selectedNodeId ? (
-          <span style={{ fontSize: '0.58rem', color: C.cyan, fontFamily: 'monospace' }}>
+          <span style={{ fontSize: '0.58rem', color: agentMode ? C.orange : C.cyan, fontFamily: 'monospace' }}>
             Click same node to deselect · Click another to switch
           </span>
+        ) : agentMode ? (
+          <>
+            {[
+              { color: C.cyan,   label: 'Case scene' },
+              { color: C.blue,   label: 'Vehicle (sighted)' },
+              { color: C.yellow, label: 'Person (keeper)' },
+              { color: C.red,    label: 'Credential (access)' },
+              { color: C.orange, label: 'Financial connection' },
+            ].map(({ color, label }) => (
+              <div key={label} style={{ display: 'flex', alignItems: 'center', gap: '0.35rem' }}>
+                <div style={{ width: 8, height: 8, borderRadius: '50%', background: color }} />
+                <span style={{ fontSize: '0.58rem', color: C.muted }}>{label}</span>
+              </div>
+            ))}
+            <span style={{ fontSize: '0.55rem', color: C.dim, marginLeft: 'auto' }}>External discovery</span>
+          </>
         ) : (
           <>
             {[
