@@ -11,6 +11,7 @@ import ArchiveBoundary from './ArchiveBoundary'
 import AtAGlanceAssessment from './AtAGlanceAssessment'
 import IntelligenceDrawer from './IntelligenceDrawer'
 import AgentInvestigationConsole from './AgentInvestigationConsole'
+import AgenticAIConsole from './AgenticAIConsole'
 
 const BACKEND = 'http://localhost:8000'
 
@@ -408,8 +409,8 @@ function ModeSelector({ mode, setMode }) {
       color: C.blue, disabled: false,
     },
     {
-      id: 'agentic-ai', label: 'Agentic AI', sublabel: 'Coming Later',
-      color: C.dim, disabled: true,
+      id: 'agentic-ai', label: 'Agentic AI', sublabel: 'Mission workflow',
+      color: C.green, disabled: false,
     },
   ]
 
@@ -562,21 +563,7 @@ export default function InvestigationConsole({ conn }) {
       <div style={{ flex: 1, display: 'flex', flexDirection: 'column', minHeight: 0, overflow: 'hidden' }}>
         {mode === 'rag' && renderRagContent()}
         {mode === 'agent' && <AgentInvestigationConsole conn={conn} />}
-        {mode === 'agentic-ai' && (
-          <div style={{
-            flex: 1, display: 'flex', flexDirection: 'column',
-            alignItems: 'center', justifyContent: 'center', gap: '0.75rem',
-          }}>
-            <div style={{ fontSize: '2rem', color: C.dim, opacity: 0.4 }}>⊘</div>
-            <div style={{ fontSize: '0.7rem', textTransform: 'uppercase', letterSpacing: '0.15em', color: C.dim }}>
-              Agentic AI — Not Yet Implemented
-            </div>
-            <p style={{ fontSize: '0.75rem', color: C.dim, textAlign: 'center', maxWidth: 360, lineHeight: 1.6 }}>
-              Goal decomposition, task prioritization, and autonomous workflow
-              management are reserved for a future build.
-            </p>
-          </div>
-        )}
+        {mode === 'agentic-ai' && <AgenticAIConsole conn={conn} />}
       </div>
     </div>
   )

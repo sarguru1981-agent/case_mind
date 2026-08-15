@@ -14,6 +14,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from api.routes import router
 from api.agentic_rag_routes import router as agentic_rag_router
 from api.ai_agent_routes import router as ai_agent_router
+from api.agentic_ai_routes import router as agentic_ai_router
 from config.settings import settings
 from models.trust_models import HealthResponse, VersionResponse
 
@@ -53,6 +54,7 @@ def version() -> VersionResponse:
 app.include_router(router, prefix="/api")
 app.include_router(agentic_rag_router, prefix="/api/agentic-rag")
 app.include_router(ai_agent_router)
+app.include_router(agentic_ai_router, prefix="/api/agentic-ai")
 
 if __name__ == "__main__":
     import uvicorn
